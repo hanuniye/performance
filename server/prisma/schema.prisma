@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Users {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   email        String   @unique
   password     String
   name         String
@@ -22,7 +22,7 @@ model Users {
   location     String?
   role         Role     @default(EMPLOYEE) // Enum for roles
   supervisor   Users?   @relation("SupervisorEmployee", fields: [supervisorId], references: [id])
-  supervisorId Int?
+  supervisorId String?
   employees    Users[]  @relation("SupervisorEmployee")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

@@ -5,12 +5,12 @@ import { createError } from "../config/errors.js";
 
 const db = new PrismaClient();
 
-export const addHR = async (req, res, next) => {
+export const addHR = async (req, res) => {
   const { name, email, password } = req.body;
   if (!email || !password || !name)
-    return next(
-      createError(StatusCodes.BAD_REQUEST, "All fields are required")
-    );
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "All fields are required" });
   try {
     const existEmail = await db.users.findFirst({
       where: {
@@ -21,25 +21,29 @@ export const addHR = async (req, res, next) => {
     if (existEmail)
       return res
         .status(StatusCodes.CONFLICT)
-        .json({ msg: "this email is already existing!!" });
+        .json({ error: "This user is already exists!" });
 
     const salt = await bcrypt.genSalt(12);
     const hashPwd = await bcrypt.hash(password, salt);
 
-    req.body["role"] = Role.EMPLOYEE;
+    req.body["role"] = Role.HR;
     req.body["password"] = hashPwd;
 
     const HR = await db.users.create({ data: req.body });
     if (!HR)
-      return next(createError(StatusCodes.NOT_FOUND, "opps error occured!"));
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "Error Occured! at Creating HR" });
 
     return res.status(StatusCodes.OK).json({ msg: HR });
   } catch (error) {
-    next(createError(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };
 
-export const getHRs = async (req, res, next) => {
+export const getHRs = async (req, res) => {
   try {
     const HR = await db.users.findMany({
       where: {
@@ -50,75 +54,112 @@ export const getHRs = async (req, res, next) => {
       },
     });
     if (!HR && !HR.length)
-      return next(
-        createError(StatusCodes.NOT_FOUND, "HR are not found")
-      );
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "HR data are not found" });
 
     return res.status(StatusCodes.OK).json({ msg: HR });
   } catch (error) {
-    next(createError(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };
 
-export const getHR = async (req, res, next) => {
+export const getHR = async (req, res) => {
   const { id } = req.params;
   if (!id)
-    return next(
-      createError(StatusCodes.BAD_REQUEST, "oopss! HR ID is missing")
-    );
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "oopss! HR ID is missing" });
+
   try {
     const HR = await db.users.findUnique({
       where: { id: id },
     });
 
     if (!HR)
-      return next(
-        createError(StatusCodes.NOT_FOUND, `HR with the id: ${id} is not found`)
-      );
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: `HR with the id: ${id} is not found` });
+
     return res.status(StatusCodes.OK).json({ msg: HR });
   } catch (error) {
-    next(createError(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };
 
 export const updateHR = async (req, res, next) => {
   const { id } = req.params;
   if (!id)
-    return next(createError(StatusCodes.BAD_REQUEST, "oopss! employee ID is missing"));
-  const { name, email, password, title, location } = req.body;
-  if (!email || !password || !title || !location || !name)
-    return next(
-      createError(StatusCodes.BAD_REQUEST, "All fields are required")
-    );
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "oopss! HR ID is missing" });
+
+  const { name, email, password } = req.body;
+  if (!email || !name)
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "All fields are required" });
+
   try {
-    const user = await db.users.update({
+    const existEmail = await db.users.findFirst({
+      where: {
+        email: email,
+      },
+    });
+
+    if (existEmail && existEmail.id !== id)
+      return res
+        .status(StatusCodes.CONFLICT)
+        .json({ error: "This user is already exists!" });
+
+    if (password && !password) {
+      const salt = await bcrypt.genSalt(12);
+      req.body["password"] = await bcrypt.hash(password, salt);
+    } else {
+      req.body = {
+        name: name,
+        email: email,
+      };
+    }
+    const HR = await db.users.update({
       where: { id: id },
       data: req.body,
     });
-    if (!user)
-      return next(createError(StatusCodes.NOT_FOUND, "ooopss! error occured"));
-
-    return res.status(StatusCodes.OK).json({ msg: user });
-  } catch (error) {
-    if (error.code === "P2002") {
-      return next(
-        createError(INTERNAL_SERVER_ERROR, "You duplicated the session")
-      );
-    }
-    next(createError(INTERNAL_SERVER_ERROR, error.message));
-  }
-};
-
-export const deleteHR = async (req, res, next) => {
-  const { id } = req.params;
-  if (!id) return next(createError(StatusCodes.BAD_REQUEST, "oopss! HR ID is missing"));
-
-  try {
-    const HR = await db.users.delete({ where: { id: id } });
-    if (!HR) return next(createError(StatusCodes.NOT_FOUND, "ooopss! error occured"));
+    if (!HR)
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "Error occured at updateing HR" });
 
     return res.status(StatusCodes.OK).json({ msg: HR });
   } catch (error) {
-    return next(createError(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
+export const deleteHR = async (req, res) => {
+  const { id } = req.params;
+  if (!id)
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "HR ID is missing" });
+
+  try {
+    const HR = await db.users.delete({ where: { id: id } });
+    if (!HR)
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "error occured in deleting HR" });
+
+    return res.status(StatusCodes.OK).json({ msg: HR });
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };

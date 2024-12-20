@@ -8,6 +8,8 @@ import morgan from "morgan";
 import authRoute from "./routes/authRoute.js";
 import employeeRoute from "./routes/employeeRoute.js";
 import HRRoute from "./routes/HRRoute.js";
+import supervisorRoute from "./routes/supervisorRoute.js";
+import profileRoute from "./routes/profileRoute.js";
 //middleware
 import authMiddleWare from "./middleware/verifyJWT.js";
 import credentials from "./middleware/originMiddleware.js";
@@ -21,7 +23,7 @@ app.use(helmet());
 app.use(credentials);
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -33,6 +35,8 @@ app.get("/" , (req, res) => {
     return res.send("app is a live")
 })
 app.use("/api/auth", authRoute);
-app.use(authMiddleWare); //auth middleware
-app.use("/api/employees", employeeRoute);
+// app.use(authMiddleWare); //auth middleware
+app.use("/api/employee", employeeRoute);
 app.use("/api/HR", HRRoute);
+app.use("/api/supervisor", supervisorRoute);
+app.use("/api/profile", profileRoute);

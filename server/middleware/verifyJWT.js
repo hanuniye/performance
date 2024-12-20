@@ -5,7 +5,7 @@ const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const token = authHeader.split(" ")[1];
@@ -14,7 +14,7 @@ const verifyJWT = (req, res, next) => {
     token,
     process.env.ACCESS_TOKEN_SECRET,
     async (err, decoded) => {
-      if (err) return res.status(StatusCodes.FORBIDDEN).json({ message: "Forbidden" });
+      if (err) return res.status(StatusCodes.FORBIDDEN).json({ error: "Forbidden" });
    
       req.user = decoded.name
       req.role = decoded.role

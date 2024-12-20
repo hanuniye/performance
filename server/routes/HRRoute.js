@@ -1,5 +1,13 @@
 import express from "express";
-import { addHR , deleteHR, getHR, getHRs, updateHR} from "../controller/HRController.js"
+import {
+  addHR,
+  deleteHR,
+  getHR,
+  getHRs,
+  updateHR,
+} from "../controller/HRController.js";
+import roles from "../middleware/rolesMiddleware.js";
+import { Role } from "@prisma/client";
 
 const router = express.Router();
 

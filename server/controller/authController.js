@@ -35,7 +35,7 @@ export const login = async (req, res, next) => {
     const refreshToken = jwt.sign(
       { email: validEmail.email },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "15s" }
+      { expiresIn: "1d" }
     );
 
     // await prisma.updateById(validEmail.id, {
@@ -55,7 +55,17 @@ export const login = async (req, res, next) => {
 
     //create secure cookie with refresh token
     res.cookie("jwt", refreshToken, cookiesOptions);
-    res.status(StatusCodes.OK).json({ user: validEmail, accessToken });
+    res
+      .status(StatusCodes.OK)
+      .json({
+        user: {
+          id: validEmail.id,
+          email: validEmail.email,
+          name: validEmail.name,
+          role: validEmail.role,
+        },
+        accessToken,
+      });
   } catch (error) {
     next(createError(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
   }

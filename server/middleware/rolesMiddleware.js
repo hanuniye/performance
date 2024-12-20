@@ -8,7 +8,7 @@ const roles = (allowedRoles) => {
     if (!result)
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "unauthorized" });
+        .json({ error: "Unauthorized" });
     next();
   };
 };
