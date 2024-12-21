@@ -1,8 +1,9 @@
-import axios from "../api/axois";
-import { useAuth } from "./useAuth";
+import { toast } from "sonner";
+import axios from "../api/axios";
+import { useGlobalProvider } from "./useGlobalProvider";
 
 const useLogout = () => {
-  const { setAuth } = useAuth();
+  const { setAuth } = useGlobalProvider();
 
   const logout = async () => {
     try {
@@ -10,15 +11,15 @@ const useLogout = () => {
       setAuth(null); // Clear global state
       localStorage.removeItem("auth"); // Clear localStorage
     } catch (error) {
-      console.error(
-        "Logout error:",
-        error.response?.data?.message || error.message
-      );
-      throw error;
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        console.log(error);
+      }
     }
   };
 
-  return logout
+  return logout;
 };
 
 export default useLogout;

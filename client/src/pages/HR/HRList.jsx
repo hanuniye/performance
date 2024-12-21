@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { customStyle } from "../../utils/costumStyle";
 import Spinner from "../../components/Spinner";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit, Search } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const HRList = () => {
   const [HRS, setHRS] = useState();
+  const [filterHRs, setFilterHRS] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const Axios = usePrivateAxios();
   const navigate = useNavigate();
@@ -54,9 +55,10 @@ const HRList = () => {
       try {
         const { data } = await Axios.get("/HR");
         setHRS(data.msg);
+        setFilterHRS(data.msg);
       } catch (error) {
         if (error.response) {
-          console.log(error.response)
+          console.log(error.response);
           toast.error(error.response.data.error);
         } else {
           console.log(error);
@@ -99,6 +101,15 @@ const HRList = () => {
     });
   };
 
+  const handleSearch = (e) => {
+    const searchData = filterHRs?.filter((hrs) => {
+      return e.target.value.toLowerCase() === ""
+        ? hrs
+        : hrs.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setHRS(searchData);
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -108,16 +119,27 @@ const HRList = () => {
       <div>
         <div className="mx-5 mt-7 space-y-2">
           <h1 className="text-lg text-bold font-medium mb-3">Manage HR</h1>
-          <CustomButton
-            url="/HR/new"
-            text="Add new"
-            icon={
-              <Add
-                className="text-white icon font-semibold"
-                style={{ fontSize: "18px" }}
+          <div className="flex items-start justify-between">
+            <CustomButton
+              url="/HR/new"
+              text="Add new"
+              icon={
+                <Add
+                  className="text-white icon font-semibold"
+                  style={{ fontSize: "18px" }}
+                />
+              }
+            />
+            <div className="border-2 px-2 md:block">
+              <input
+                type="text"
+                className="search outline-none"
+                placeholder="search by name"
+                onChange={handleSearch}
               />
-            }
-          />
+              <Search style={{ fontSize: "18px" }} />
+            </div>
+          </div>
           {HRS && (
             <DataTable
               className="border"

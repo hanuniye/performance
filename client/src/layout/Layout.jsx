@@ -22,7 +22,6 @@ const Layout = () => {
           toastOptions={{
             style: {
               textTransform: "capitalize",
-              fontSize: "15px"
             },
           }}
         />

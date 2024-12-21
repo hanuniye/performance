@@ -16,6 +16,10 @@ import UpdateSupervisor from "./pages/supervisor/UpdateSuperv";
 import ListEmployee from "./pages/employee/ListEmployee";
 import NewEmployee from "./pages/employee/NewEmployee";
 import UpdateEmployee from "./pages/employee/UpdateEmployee";
+import Profile from "./pages/profile/Profile";
+import Login from "./pages/auth/Login";
+import Unauthorized from "./pages/Unauthorized";
+import ProtectedRoutes from "./components/ProtectedRoute";
 
 function App() {
   const client = new QueryClient({
@@ -31,23 +35,35 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            {/* <Route element={<ProtectedRoute />}> */}
-            <Route path="/" element={<Home />} />
-            <Route path="HR">
-              <Route index element={<HRList />} />
-              <Route path="new" element={<NewHR />} />
-              <Route path=":id" element={<UpdateHR />} />
+            <Route
+              element={
+                <ProtectedRoutes
+                  allowedRoles={["EMPLOYEE", "HR", "SUPERVISOR"]}
+                />
+              }
+            >
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
-            <Route path="supervisors">
-              <Route index element={<ListSupervisor />} />
-              <Route path="new" element={<NewSupervisor />} />
-              <Route path=":id" element={<UpdateSupervisor />} />
+            <Route element={<ProtectedRoutes allowedRoles={["HR"]} />}>
+              <Route path="HR">
+                <Route index element={<HRList />} />
+                <Route path="new" element={<NewHR />} />
+                <Route path=":id" element={<UpdateHR />} />
+              </Route>
+
+              <Route path="supervisors">
+                <Route index element={<ListSupervisor />} />
+                <Route path="new" element={<NewSupervisor />} />
+                <Route path=":id" element={<UpdateSupervisor />} />
+              </Route>
+              <Route path="employees">
+                <Route index element={<ListEmployee />} />
+                <Route path="new" element={<NewEmployee />} />
+                <Route path=":id" element={<UpdateEmployee />} />
+              </Route>
             </Route>
-            <Route path="employees">
-              <Route index element={<ListEmployee />} />
-              <Route path="new" element={<NewEmployee />} />
-              <Route path=":id" element={<UpdateEmployee />} />
-            </Route>
+
             {/* <Route path="/users">
                 <Route index element={<List />} />
                 <Route path="new" element={<New />} />
@@ -60,8 +76,9 @@ function App() {
               </Route> */}
             {/* </Route> */}
           </Route>
-          {/* <Route path="/login" element={<Login />} />
-          <Route path="/singup" element={<Singup />} /> */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/singup" element={<Singup />} /> */}
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

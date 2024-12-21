@@ -35,7 +35,7 @@ app.get("/" , (req, res) => {
     return res.send("app is a live")
 })
 app.use("/api/auth", authRoute);
-// app.use(authMiddleWare); //auth middleware
+app.use(authMiddleWare); //auth middleware
 app.use("/api/employee", employeeRoute);
 app.use("/api/HR", HRRoute);
 app.use("/api/supervisor", supervisorRoute);

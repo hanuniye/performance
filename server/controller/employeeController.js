@@ -132,7 +132,7 @@ export const updateEmployee = async (req, res, next) => {
         .status(StatusCodes.CONFLICT)
         .json({ error: "This user is already exists!" });
 
-    if (password && !password) {
+    if (password) {
       const salt = await bcrypt.genSalt(12);
       req.body["password"] = await bcrypt.hash(password, salt);
     } else {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { customStyle } from "../../utils/costumStyle";
 import Spinner from "../../components/Spinner";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit, Search } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const ListSupervisor = () => {
   const [supervisors, setSupervisors] = useState();
+  const [filterSupervisors, setFilterSupervisors] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const Axios = usePrivateAxios();
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const ListSupervisor = () => {
       try {
         const { data } = await Axios.get("/supervisor");
         setSupervisors(data.msg);
+        setFilterSupervisors(data.msg);
       } catch (error) {
         if (error.response) {
           toast.error(error.response.data.error);
@@ -98,6 +100,15 @@ const ListSupervisor = () => {
     });
   };
 
+  const handleSearch = (e) => {
+    const searchData = filterSupervisors?.filter((supervisor) => {
+      return e.target.value.toLowerCase() === ""
+        ? supervisor
+        : supervisor.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setSupervisors(searchData);
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -106,17 +117,30 @@ const ListSupervisor = () => {
     <>
       <div>
         <div className="mx-5 mt-7 space-y-2">
-          <h1 className="text-lg text-bold font-medium mb-3">Manage Supervisors</h1>
-          <CustomButton
-            url="/supervisors/new"
-            text="Add new"
-            icon={
-              <Add
-                className="text-white icon font-semibold"
-                style={{ fontSize: "18px" }}
+          <h1 className="text-lg text-bold font-medium mb-3">
+            Manage Supervisors
+          </h1>
+          <div className="flex items-start justify-between">
+            <CustomButton
+              url="/supervisors/new"
+              text="Add new"
+              icon={
+                <Add
+                  className="text-white icon font-semibold"
+                  style={{ fontSize: "18px" }}
+                />
+              }
+            />
+            <div className="border-2 px-2 md:block">
+              <input
+                type="text"
+                className="search outline-none"
+                placeholder="search by name"
+                onChange={handleSearch}
               />
-            }
-          />
+              <Search style={{ fontSize: "18px" }} />
+            </div>
+          </div>
           {supervisors && (
             <DataTable
               className="border"
@@ -129,7 +153,6 @@ const ListSupervisor = () => {
             />
           )}
         </div>
-
       </div>
     </>
   );

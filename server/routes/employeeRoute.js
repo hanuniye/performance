@@ -11,10 +11,10 @@ import roles from "../middleware/rolesMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getEmployees);
-router.post("/", addEmployee);
-router.get("/:id", getEmployee);
-router.patch("/:id", updateEmployee);
-router.delete("/:id", deleteEmployee);
+router.get("/", roles([Role.HR]), getEmployees);
+router.post("/", roles([Role.HR]), addEmployee);
+router.get("/:id", roles([Role.HR]), getEmployee);
+router.patch("/:id", roles([Role.HR]), updateEmployee);
+router.delete("/:id", roles([Role.HR]), deleteEmployee);
 
 export default router;

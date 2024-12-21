@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { customStyle } from "../../utils/costumStyle";
 import Spinner from "../../components/Spinner";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit, Search } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const ListEmployee = () => {
   const [employees, setEmployees] = useState();
+  const [filterEmployees, setFilterEmployees] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const Axios = usePrivateAxios();
   const navigate = useNavigate();
@@ -62,14 +63,15 @@ const ListEmployee = () => {
       sortable: true,
     },
   ];
-  
 
   useEffect(() => {
     const getEmployees = async () => {
       setIsLoading(true);
       try {
         const { data } = await Axios.get("/employee");
-        setEmployees(data.msg);
+        console.log(data?.msg)
+        setEmployees(data?.msg);
+        setFilterEmployees(data?.msg);
       } catch (error) {
         if (error.response) {
           toast.error(error.response.data.error);
@@ -114,6 +116,15 @@ const ListEmployee = () => {
     });
   };
 
+  const handleSearch = (e) => {
+    const searchData = filterEmployees?.filter((employee) => {
+      return e.target.value.toLowerCase() === ""
+        ? employee
+        : employee.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setEmployees(searchData);
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -125,16 +136,27 @@ const ListEmployee = () => {
           <h1 className="text-lg text-bold font-medium mb-3">
             Manage Employees
           </h1>
-          <CustomButton
-            url="/employees/new"
-            text="Add new"
-            icon={
-              <Add
-                className="text-white icon font-semibold"
-                style={{ fontSize: "18px" }}
+          <div className="flex items-start justify-between">
+            <CustomButton
+              url="/employees/new"
+              text="Add new"
+              icon={
+                <Add
+                  className="text-white icon font-semibold"
+                  style={{ fontSize: "18px" }}
+                />
+              }
+            />
+            <div className="border-2 px-2 md:block">
+              <input
+                type="text"
+                className="search outline-none"
+                placeholder="search by name"
+                onChange={handleSearch}
               />
-            }
-          />
+              <Search style={{ fontSize: "18px" }} />
+            </div>
+          </div>
           {employees && (
             <DataTable
               className="border"

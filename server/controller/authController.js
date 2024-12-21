@@ -10,21 +10,22 @@ export const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password)
-    return next(
-      createError(StatusCodes.BAD_REQUEST, "missing email or password")
-    );
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "missing email or password" });
+
   try {
     const validEmail = await prisma.users.findFirst({ where: { email } });
     if (!validEmail)
-      return next(
-        createError(StatusCodes.UNAUTHORIZED, "this user does not exist!!")
-      );
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: "this user does not exist!!" });
 
     const isMatch = await bcrypt.compare(password, validEmail.password);
     if (!isMatch)
-      return next(
-        createError(StatusCodes.UNAUTHORIZED, "password is not match!!")
-      );
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: "password is not match!!" });
 
     const accessToken = jwt.sign(
       { name: validEmail.name, role: validEmail.role },
@@ -55,40 +56,43 @@ export const login = async (req, res, next) => {
 
     //create secure cookie with refresh token
     res.cookie("jwt", refreshToken, cookiesOptions);
-    res
-      .status(StatusCodes.OK)
-      .json({
-        user: {
-          id: validEmail.id,
-          email: validEmail.email,
-          name: validEmail.name,
-          role: validEmail.role,
-        },
-        accessToken,
-      });
+    res.status(StatusCodes.OK).json({
+      user: {
+        id: validEmail.id,
+        email: validEmail.email,
+        name: validEmail.name,
+        role: validEmail.role,
+      },
+      accessToken,
+    });
   } catch (error) {
-    next(createError(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
+    return res.status(INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
 };
 
 export const refresh = (req, res, next) => {
   const cookies = req.cookies;
 
-  if (!cookies?.jwt) return next(createError(UNAUTHORIZED, "Unauthorized"));
+  if (!cookies?.jwt)
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: "Unauthorized!" });
 
   const refreshToken = cookies.jwt;
-  console.log(refreshToken);
 
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
-      if (err) return next(createError(StatusCodes.FORBIDDEN, "Forbidden"));
+      if (err)
+        return res.status(StatusCodes.FORBIDDEN).json({ error: "Forbidden!" });
       const user = await prisma.users.findFirst({
         where: { email: decoded.email },
       });
       if (!user)
-        return next(createError(StatusCodes.UNAUTHORIZED, "Unauthorized"));
+        return res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ error: "Unauthorized!" });
 
       const accessToken = jwt.sign(
         { email: user.email, role: user.role },
