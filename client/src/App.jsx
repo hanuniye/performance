@@ -18,6 +18,7 @@ import NewEmployee from "./pages/employee/NewEmployee";
 import UpdateEmployee from "./pages/employee/UpdateEmployee";
 import Profile from "./pages/profile/Profile";
 import Login from "./pages/auth/Login";
+import NewPerformance from "./pages/performance/NewPerf";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoutes from "./components/ProtectedRoute";
 
@@ -44,6 +45,7 @@ function App() {
             >
               <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/performances" element={<NewPerformance />} />
             </Route>
             <Route element={<ProtectedRoutes allowedRoles={["HR"]} />}>
               <Route path="HR">

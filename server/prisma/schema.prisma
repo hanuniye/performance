@@ -14,18 +14,69 @@ datasource db {
 }
 
 model Users {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  password     String
-  name         String
-  title        String?
-  location     String?
-  role         Role     @default(EMPLOYEE) // Enum for roles
-  supervisor   Users?   @relation("SupervisorEmployee", fields: [supervisorId], references: [id])
-  supervisorId String?
-  employees    Users[]  @relation("SupervisorEmployee")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                String              @id @default(uuid())
+  email             String              @unique
+  password          String
+  name              String
+  title             String?
+  location          String?
+  role              Role                @default(EMPLOYEE) // Enum for roles
+  supervisor        Users?              @relation("SupervisorEmployee", fields: [supervisorId], references: [id])
+  supervisorId      String?
+  employees         Users[]             @relation("SupervisorEmployee")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  PerformanceReview PerformanceReview[] @relation("EmployeeReviews")
+}
+
+model PerformanceReview {
+  id                            String    @id @default(uuid())
+  employeeId                    String
+  employee                      Users     @relation("EmployeeReviews", fields: [employeeId], references: [id])
+  name                          String
+  title                         String
+  manager                       String
+  location                      String
+  employeeComment               String?
+  managerComment                String?
+  self_majorAccomplishments     String?
+  self_areasForImprovement      String?
+  manag_majorAccomplishments    String?
+  manag_selfareasForImprovement String?
+  overallRating                 String?
+  managerSignature              String?
+  date                          DateTime?
+  employeeSignature             String?
+  employeeComments              String?
+  goals                         Goal[]    @relation("ReviewGoals")
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @updatedAt
+}
+
+model Goal {
+  id                   String            @id @default(uuid())
+  performanceReviewId  String
+  performanceReview    PerformanceReview @relation("ReviewGoals", fields: [performanceReviewId], references: [id])
+  globalImpactArea     String
+  coreCompetency       String
+  functionalCompetency String
+  keyTasks             String
+  whyImportant         String
+  whenAccomplish       DateTime
+  employeeQ1           String?
+  employeeQ2           String?
+  employeeQ3           String?
+  employeeQ4           String?
+  managerQ1            String?
+  managerQ2            String?
+  managerQ3            String?
+  managerQ4            String?
+  employeeFeedback     String?
+  managerFeedback      String?
+  selfRating           Int?
+  managerRating        Int?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
 }
 
 enum Role {

@@ -14,13 +14,19 @@ import {
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
   FiberManualRecord,
+  Work,
+  Leaderboard,
+  ChatRounded,
+  BookTwoTone,
+  People,
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 import { useGlobalProvider } from "../HOOKS/useGlobalProvider";
 
 const Sidebar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { auth } = useGlobalProvider();
 
   return (
     <div className="sidebar flex flex-col py-5 shadow-md w-52 h-[100vh]">
@@ -54,81 +60,87 @@ const Sidebar = () => {
             Lists
           </h6>
           {/* HR  */}
-          <div>
-            <div
-              className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
-              onClick={() => {
-                navigate("/HR")
-              }}
-            >
-              <div className="flex items-center space-x-3">
-                <PeopleAltOutlined
-                  className="text-blue-400 icon"
-                  style={{ fontSize: "18px" }}
-                />
-                <h6 className="text-sm font-medium text-blackLight md:text-md">
-                  HR
-                </h6>
+          {auth?.role === "HR" && (
+            <div>
+              <div
+                className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
+                onClick={() => {
+                  navigate("/HR");
+                }}
+              >
+                <div className="flex items-center space-x-3">
+                  <Leaderboard
+                    className="text-blue-400 icon"
+                    style={{ fontSize: "18px" }}
+                  />
+                  <h6 className="text-sm font-medium text-blackLight md:text-md">
+                    HR
+                  </h6>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* Performance  */}
           <div>
             <div
               className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
               onClick={() => {
-                
+                navigate("/performances");
               }}
             >
               <div className="flex items-center space-x-3">
-                <PeopleAltOutlined
+                <ChatRounded
                   className="text-blue-400 icon"
                   style={{ fontSize: "18px" }}
                 />
                 <h6 className="text-sm font-medium text-blackLight md:text-md">
-                Performance
+                  Performance
                 </h6>
               </div>
             </div>
           </div>
           {/* Supervisors  */}
-          <div>
-            <div
-              className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
-              onClick={() => {
-                navigate("/supervisors")
-              }}
-            >
-              <div className="flex items-center space-x-3">
-                <PeopleAltOutlined
-                  className="text-blue-400 icon"
-                  style={{ fontSize: "18px" }}
-                />
-                <h6 className="text-sm font-medium text-blackLight md:text-md">
-                Supervisors
-                </h6>
+          {auth?.role === "HR" && (
+            <div>
+              <div
+                className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
+                onClick={() => {
+                  navigate("/supervisors");
+                }}
+              >
+                <div className="flex items-center space-x-3">
+                  <BookTwoTone
+                    className="text-blue-400 icon"
+                    style={{ fontSize: "18px" }}
+                  />
+                  <h6 className="text-sm font-medium text-blackLight md:text-md">
+                    Supervisors
+                  </h6>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* Employees  */}
-          <div>
-            <div
-              className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
-              onClick={() => {
-                navigate("/employees")
-              }}
-            >
-              <div className="flex items-center space-x-3">
-                <PeopleAltOutlined
-                  className="text-blue-400 icon"
-                  style={{ fontSize: "18px" }}
-                />
-                <h6 className="text-sm font-medium text-blackLight md:text-md">
-                Employees
-                </h6>
+          {auth?.role === "HR" && (
+            <div>
+              <div
+                className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
+                onClick={() => {
+                  navigate("/employees");
+                }}
+              >
+                <div className="flex items-center space-x-3">
+                  <People
+                    className="text-blue-400 icon"
+                    style={{ fontSize: "18px" }}
+                  />
+                  <h6 className="text-sm font-medium text-blackLight md:text-md">
+                    Employees
+                  </h6>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
