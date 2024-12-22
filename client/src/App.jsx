@@ -19,8 +19,11 @@ import UpdateEmployee from "./pages/employee/UpdateEmployee";
 import Profile from "./pages/profile/Profile";
 import Login from "./pages/auth/Login";
 import NewPerformance from "./pages/performance/NewPerf";
+import PerformanceReviewsList from "./pages/performance/PerformanceReviewsList";
+import PerformanceReviewDetails from "./pages/performance/PerformanceReviewDetails";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoutes from "./components/ProtectedRoute";
+import UpdatePerformanceReview from "./pages/performance/UpdatePerformanceReview";
 
 function App() {
   const client = new QueryClient({
@@ -44,8 +47,14 @@ function App() {
               }
             >
               <Route path="/" element={<Home />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/performances" element={<NewPerformance />} />
+              <Route path="profile" element={<Profile />} />
+              {/* <Route path="performances" element={<NewPerformance />} /> */}
+              <Route path="performance_reviews">
+                <Route index element={<PerformanceReviewsList />} />
+                <Route path=":id/details" element={<PerformanceReviewDetails />} />
+                <Route path="new" element={<NewPerformance />} />
+                <Route path=":id/update" element={<UpdatePerformanceReview />} />
+              </Route>
             </Route>
             <Route element={<ProtectedRoutes allowedRoles={["HR"]} />}>
               <Route path="HR">

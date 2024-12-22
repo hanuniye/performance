@@ -10,6 +10,7 @@ import employeeRoute from "./routes/employeeRoute.js";
 import HRRoute from "./routes/HRRoute.js";
 import supervisorRoute from "./routes/supervisorRoute.js";
 import profileRoute from "./routes/profileRoute.js";
+import performanceRoute from "./routes/performanceRoute.js";
 //middleware
 import authMiddleWare from "./middleware/verifyJWT.js";
 import credentials from "./middleware/originMiddleware.js";
@@ -40,3 +41,4 @@ app.use("/api/employee", employeeRoute);
 app.use("/api/HR", HRRoute);
 app.use("/api/supervisor", supervisorRoute);
 app.use("/api/profile", profileRoute);
+app.use("/api/performance_review", performanceRoute);

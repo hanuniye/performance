@@ -30,27 +30,30 @@ model Users {
 }
 
 model PerformanceReview {
-  id                            String    @id @default(uuid())
-  employeeId                    String
-  employee                      Users     @relation("EmployeeReviews", fields: [employeeId], references: [id])
-  name                          String
-  title                         String
-  manager                       String
-  location                      String
-  employeeComment               String?
-  managerComment                String?
-  self_majorAccomplishments     String?
-  self_areasForImprovement      String?
-  manag_majorAccomplishments    String?
-  manag_selfareasForImprovement String?
-  overallRating                 String?
-  managerSignature              String?
-  date                          DateTime?
-  employeeSignature             String?
-  employeeComments              String?
-  goals                         Goal[]    @relation("ReviewGoals")
-  createdAt                     DateTime  @default(now())
-  updatedAt                     DateTime  @updatedAt
+  id                         String    @id @default(uuid())
+  employeeId                 String
+  employee                   Users     @relation("EmployeeReviews", fields: [employeeId], references: [id])
+  name                       String
+  title                      String
+  manager                    String
+  location                   String
+  fy                         String
+  employeeComment            String?
+  managerComment             String?
+  self_majorAccomplishments  String?
+  self_areasForImprovement   String?
+  manag_majorAccomplishments String?
+  manag_areasForImprovement  String?
+  overallRating              String?
+  managerSignature           String?
+  employeeDate               DateTime?
+  managerDate                DateTime?
+  employeeSignature          String?
+  employeeComments           String?
+  status                     Status    @default(SUBMITTED) // Enum for roles
+  goals                      Goal[]    @relation("ReviewGoals")
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
 }
 
 model Goal {
@@ -73,8 +76,8 @@ model Goal {
   managerQ4            String?
   employeeFeedback     String?
   managerFeedback      String?
-  selfRating           Int?
-  managerRating        Int?
+  selfRating           String?
+  managerRating        String?
   createdAt            DateTime          @default(now())
   updatedAt            DateTime          @updatedAt
 }
@@ -83,4 +86,10 @@ enum Role {
   HR
   SUPERVISOR
   EMPLOYEE
+}
+
+enum Status {
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
 }

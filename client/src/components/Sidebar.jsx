@@ -85,7 +85,7 @@ const Sidebar = () => {
             <div
               className="flex justify-between items-center pl-7 pr-3 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
               onClick={() => {
-                navigate("/performances");
+                navigate("/performance_reviews");
               }}
             >
               <div className="flex items-center space-x-3">

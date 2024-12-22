@@ -9,6 +9,8 @@ const roles = (allowedRoles) => {
       return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ error: "Unauthorized" });
+    req.role = role;
+    req.userId = req.userId;
     next();
   };
 };

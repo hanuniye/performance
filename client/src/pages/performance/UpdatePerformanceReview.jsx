@@ -1,133 +1,91 @@
-import React, { useState } from "react";
-import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
+import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
 import { toast } from "sonner";
+import Spinner from "../../components/Spinner";
 
-const PerformanceReviewForm = ({}) => {
+const UpdatePerformanceReview = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [review, setReview] = useState(null);
+  const axios = usePrivateAxios();
   const { auth } = useGlobalProvider();
-  const [formData, setFormData] = useState({
-    employeeId: auth?.userData?.id,
-    name: "",
-    title: "",
-    manager: "",
-    location: "",
-    fy: "",
-    goals: [
-      {
-        globalImpactArea: "",
-        coreCompetency: "",
-        functionalCompetency: "",
-        keyTasks: "",
-        whyImportant: "",
-        whenAccomplish: "",
-        quarterlyUpdates: [
-          {
-            employeeUpdates: { q1: "", q2: "", q3: "", q4: "" },
-            // managerUpdates: { q1: "", q2: "", q3: "", q4: "" },
-          },
-        ],
-        employeeFeedback: "",
-        managerFeedback: "",
-        selfRating: "",
-        managerRating: "",
-      },
-    ],
-
-    // employeeComment: "",
-    // managerComment: "",
-    // self_majorAccomplishments: "",
-    // self_areasForImprovement: "",
-    // maneg_majorAccomplishments: "",
-    // maneg_areasForImprovement: "",
-    // overallRating: "",
-    // managerSignature: "",
-    // managerDate: "",
-    // employeeDate: "",
-    // employeeSignature: "",
-    // employeeComments: "",
-  });
-  const Axios = usePrivateAxios();
-
-  const [isMidYearCollapsed, setIsMidYearCollapsed] = useState(true);
-  const [isYearEndCollapsed, setIsYearEndCollapsed] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const startYear = 2024;
   const endYear = 2050;
 
-  const handleAddGoal = () => {
-    setFormData({
-      ...formData,
-      goals: [
-        ...formData.goals,
-        {
-          globalImpactArea: "",
-          coreCompetency: "",
-          functionalCompetency: "",
-          keyTasks: "",
-          whyImportant: "",
-          whenAccomplish: "",
-          quarterlyUpdates: [
-            {
-              employeeUpdates: { q1: "", q2: "", q3: "", q4: "" },
-              managerUpdates: { q1: "", q2: "", q3: "", q4: "" },
-            },
-          ],
-          employeeFeedback: "",
-          managerFeedback: "",
-          selfRating: "",
-          managerRating: "",
-        },
-      ],
-    });
-  };
+  const [isMidYearCollapsed, setIsMidYearCollapsed] = useState(true);
+  const [isYearEndCollapsed, setIsYearEndCollapsed] = useState(true);
 
-  const handleRemoveGoal = (index) => {
-    const updatedGoals = formData.goals.filter((_, i) => i !== index);
-    setFormData({ ...formData, goals: updatedGoals });
-  };
+  useEffect(() => {
+    const fetchReview = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`/performance_review/${id}`);
+        setReview(response.data?.msg);
+        console.log(response.data?.msg);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReview();
+  }, [id]);
 
   const handleInputChange = (e, section, index, subIndex, field) => {
     const { name, value } = e.target;
-    const updatedFormData = { ...formData };
+    const updatedReview = { ...review };
 
     if (section === "goals") {
       if (subIndex !== undefined) {
-        updatedFormData.goals[index].quarterlyUpdates[subIndex][field][name] =
+        updatedReview.goals[index].quarterlyUpdates[subIndex][field][name] =
           value;
       } else {
-        updatedFormData.goals[index][name] = value;
+        updatedReview.goals[index][name] = value;
       }
     } else {
-      updatedFormData[name] = value;
+      updatedReview[name] = value;
     }
 
-    setFormData(updatedFormData);
+    setReview(updatedReview);
   };
 
-  const onSubmit = async (e) => {
-    console.log(formData);
+  const handleRemoveGoal = (index) => {
+    const updatedGoals = review.goals.filter((_, i) => i !== index);
+    setReview({ ...review, goals: updatedGoals });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await Axios.post("/performance_review", JSON.stringify(formData), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      toast.success("Performance_review created successfully!");
-      // navigate("/supervisors");
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response);
-        toast.error(error.response.data.error);
-      } else {
-        console.log(error.message);
-      }
-    }
+    console.log(review)
+    // try {
+    //   await axios.put(`/performance_review/${id}`, review);
+    //   alert("Performance review updated successfully");
+    //   //   navigate.push(`/performanceReview/${id}`);
+    // } catch (error) {
+    //   console.error(error);
+    //   alert("Error updating performance review");
+    // }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const isSupervisor = auth?.role === "SUPERVISOR";
+  const isEmployee = auth?.role === "EMPLOYEE";
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       className="max-w-4xl mx-auto p-6 mt-5 bg-white shadow-md rounded-lg"
     >
       <div className="mb-16">
@@ -135,10 +93,11 @@ const PerformanceReviewForm = ({}) => {
         <label className="block mb-2">(FY)</label>
         <select
           name="fy"
-          value={formData.fy}
+          value={review?.fy}
           onChange={handleInputChange}
           className="w-full p-2 mb-4 border rounded"
           required
+          disabled={isSupervisor}
         >
           <option value="">Select FY</option>
           {Array.from({ length: endYear - startYear + 1 }, (_, index) => {
@@ -154,48 +113,52 @@ const PerformanceReviewForm = ({}) => {
         <input
           type="text"
           name="name"
-          value={formData.name}
+          value={review?.name}
           onChange={handleInputChange}
           placeholder="Name"
           className="w-full p-2 mb-4 border rounded"
           required
+          disabled={isSupervisor}
         />
         <label className="block mb-2">Title</label>
         <input
           type="text"
           name="title"
-          value={formData.title}
+          value={review?.title}
           onChange={handleInputChange}
           placeholder="Title"
           className="w-full p-2 mb-4 border rounded"
           required
+          disabled={isSupervisor}
         />
         <label className="block mb-2">Manager</label>
         <input
           type="text"
           name="manager"
-          value={formData.manager}
+          value={review?.manager}
           onChange={handleInputChange}
           placeholder="Manager"
           className="w-full p-2 mb-4 border rounded"
           required
+          disabled={isSupervisor}
         />
         <label className="block mb-2">Location</label>
         <input
           type="text"
           name="location"
-          value={formData.location}
+          value={review?.location}
           onChange={handleInputChange}
           placeholder="Location"
           className="w-full p-2 mb-10 border rounded"
           required
+          disabled={isSupervisor}
         />
 
-        {formData.goals.map((goal, index) => (
+        {review?.goals?.map((goal, index) => (
           <div key={index} className="mb-6 p-4 border rounded-lg bg-gray-50">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold">Goal {index + 1}</h3>
-              {formData?.goals?.length > 1 && (
+              {/* {review?.goals?.length > 1 && (
                 <button
                   type="button"
                   onClick={() => handleRemoveGoal(index)}
@@ -203,15 +166,16 @@ const PerformanceReviewForm = ({}) => {
                 >
                   Remove
                 </button>
-              )}
+              )} */}
             </div>
             <label className="block mb-2">Global Impact Area</label>
             <select
               name="globalImpactArea"
-              value={goal.globalImpactArea}
+              value={goal?.globalImpactArea}
               onChange={(e) => handleInputChange(e, "goals", index)}
               className="w-full p-2 mb-4 border rounded"
               required
+              disabled={isSupervisor}
             >
               <option value="">Select Global Impact Area</option>
               <option value="Locally Led">Locally Led</option>
@@ -222,10 +186,11 @@ const PerformanceReviewForm = ({}) => {
             <label className="block mb-2">Core Competency</label>
             <select
               name="coreCompetency"
-              value={goal.coreCompetency}
+              value={goal?.coreCompetency}
               onChange={(e) => handleInputChange(e, "goals", index)}
               className="w-full p-2 mb-4 border rounded"
               required
+              disabled={isSupervisor}
             >
               <option value="">Select Core Competency</option>
               <option value="Communication">Communication</option>
@@ -235,43 +200,47 @@ const PerformanceReviewForm = ({}) => {
             <input
               type="text"
               name="functionalCompetency"
-              value={goal.functionalCompetency}
+              value={goal?.functionalCompetency}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Functional Competency"
               className="w-full p-2 mb-4 border rounded"
               required
+              disabled={isSupervisor}
             />
             <label className="block mb-2">Key Tasks</label>
             <input
               type="text"
               name="keyTasks"
-              value={goal.keyTasks}
+              value={goal?.keyTasks}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Key Tasks"
               className="w-full p-2 mb-4 border rounded"
               required
+              disabled={isSupervisor}
             />
             <label className="block mb-2">Why is this important?</label>
             <input
               type="text"
               name="whyImportant"
-              value={goal.whyImportant}
+              value={goal?.whyImportant}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Why is this important?"
               className="w-full p-2 mb-4 border rounded"
               required
+              disabled={isSupervisor}
             />
             <label className="block mb-2">When will you accomplish it?</label>
             <input
               type="date"
               name="whenAccomplish"
-              value={goal.whenAccomplish}
+              value={goal?.whenAccomplish}
               onChange={(e) => handleInputChange(e, "goals", index)}
               className="w-full p-2 mb-4 border rounded"
               required
+              disabled={isSupervisor}
             />
 
-            {goal.quarterlyUpdates.map((update, subIndex) => (
+            {goal?.quarterlyUpdates?.map((update, subIndex) => (
               <div
                 key={subIndex}
                 className="mb-4 p-4 border rounded-lg bg-white"
@@ -283,7 +252,7 @@ const PerformanceReviewForm = ({}) => {
                     <input
                       type="text"
                       name="q1"
-                      value={update.employeeUpdates.q1}
+                      value={update?.employeeUpdates?.q1}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -296,11 +265,12 @@ const PerformanceReviewForm = ({}) => {
                       placeholder="Employee Q1"
                       className="w-full p-2 mb-2 border rounded"
                       required
+                      disabled={isSupervisor}
                     />
                     <input
                       type="text"
                       name="q2"
-                      value={update.employeeUpdates.q2}
+                      value={update?.employeeUpdates?.q2}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -313,11 +283,12 @@ const PerformanceReviewForm = ({}) => {
                       placeholder="Employee Q2"
                       className="w-full p-2 mb-2 border rounded"
                       required
+                      disabled={isSupervisor}
                     />
                     <input
                       type="text"
                       name="q3"
-                      value={update.employeeUpdates.q3}
+                      value={update?.employeeUpdates?.q3}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -330,11 +301,12 @@ const PerformanceReviewForm = ({}) => {
                       placeholder="Employee Q3"
                       className="w-full p-2 mb-2 border rounded"
                       required
+                      disabled={isSupervisor}
                     />
                     <input
                       type="text"
                       name="q4"
-                      value={update.employeeUpdates.q4}
+                      value={update?.employeeUpdates?.q4}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -347,6 +319,7 @@ const PerformanceReviewForm = ({}) => {
                       placeholder="Employee Q4"
                       className="w-full p-2 mb-2 border rounded"
                       required
+                      disabled={isSupervisor}
                     />
                   </div>
                   <div>
@@ -354,7 +327,7 @@ const PerformanceReviewForm = ({}) => {
                     <input
                       type="text"
                       name="q1"
-                      // value={update.managerUpdates.q1}
+                      value={update?.managerUpdates?.q1}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -371,7 +344,7 @@ const PerformanceReviewForm = ({}) => {
                     <input
                       type="text"
                       name="q2"
-                      // value={update.managerUpdates.q2}
+                      value={update?.managerUpdates?.q2}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -383,12 +356,12 @@ const PerformanceReviewForm = ({}) => {
                       }
                       placeholder="Manager Q2"
                       className="w-full p-2 mb-2 border rounded"
-                      disabled
+                      disabled={isEmployee}
                     />
                     <input
                       type="text"
                       name="q3"
-                      // value={update.managerUpdates.q3}
+                      value={update?.managerUpdates?.q3}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -400,12 +373,12 @@ const PerformanceReviewForm = ({}) => {
                       }
                       placeholder="Manager Q3"
                       className="w-full p-2 mb-2 border rounded"
-                      disabled
+                      disabled={isEmployee}
                     />
                     <input
                       type="text"
                       name="q4"
-                      // value={update.managerUpdates.q4}
+                      value={update?.managerUpdates?.q4}
                       onChange={(e) =>
                         handleInputChange(
                           e,
@@ -417,7 +390,7 @@ const PerformanceReviewForm = ({}) => {
                       }
                       placeholder="Manager Q4"
                       className="w-full p-2 mb-2 border rounded"
-                      disabled
+                      disabled={isEmployee}
                     />
                   </div>
                 </div>
@@ -430,10 +403,11 @@ const PerformanceReviewForm = ({}) => {
                 <input
                   type="text"
                   name="employeeFeedback"
-                  value={goal.employeeFeedback}
+                  value={goal?.employeeFeedback}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   placeholder="Employee Feedback"
                   className="w-full p-2 mb-4 border rounded"
+                  disabled={isSupervisor}
                 />
               </div>
               <div>
@@ -441,11 +415,11 @@ const PerformanceReviewForm = ({}) => {
                 <input
                   type="text"
                   name="managerFeedback"
-                  // value={goal.managerFeedback}
+                  value={goal?.managerFeedback}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   placeholder="Manager Feedback"
                   className="w-full p-2 mb-4 border rounded"
-                  disabled
+                  disabled={isEmployee}
                 />
               </div>
             </div>
@@ -454,9 +428,10 @@ const PerformanceReviewForm = ({}) => {
                 <label className="block mb-2">Self-Rating</label>
                 <select
                   name="selfRating"
-                  value={goal.selfRating}
+                  value={goal?.selfRating}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   className="w-full p-2 mb-4 border rounded"
+                  disabled={isSupervisor}
                 >
                   <option value="">Select Self-Rating</option>
                   <option value="Significantly Exceeds Requirements (SER)">
@@ -480,10 +455,10 @@ const PerformanceReviewForm = ({}) => {
                 <label className="block mb-2">Manager Rating</label>
                 <select
                   name="managerRating"
-                  // value={goal.managerRating}
+                  value={goal?.managerRating}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   className="w-full p-2 mb-4 border rounded"
-                  disabled
+                  disabled={isEmployee}
                 >
                   <option value="">Select Manager Rating</option>
                   <option value="Significantly Exceeds Requirements (SER)">
@@ -506,13 +481,13 @@ const PerformanceReviewForm = ({}) => {
             </div>
           </div>
         ))}
-        <button
+        {/* <button
           type="button"
           onClick={handleAddGoal}
           className="w-full py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300"
         >
           Add Goal
-        </button>
+        </button> */}
       </div>
 
       <div className="mb-10">
@@ -520,7 +495,7 @@ const PerformanceReviewForm = ({}) => {
           className="text-2xl font-bold mb-4 cursor-pointer"
           onClick={() => setIsMidYearCollapsed(!isMidYearCollapsed)}
         >
-          Mid-Year Review {isMidYearCollapsed ? "+" : "-"}
+          Mid-Year Review? {isMidYearCollapsed ? "+" : "-"}
         </h2>
         {!isMidYearCollapsed && (
           <div className="grid grid-cols-2 gap-4">
@@ -529,11 +504,11 @@ const PerformanceReviewForm = ({}) => {
               <input
                 type="text"
                 name="employeeComment"
-                disabled
-                // value={formData.employeeComment}
+                value={review?.employeeComment}
                 onChange={handleInputChange}
                 placeholder="Employee Comment"
                 className="w-full p-2 mb-4 border rounded"
+                disabled={isSupervisor}
               />
             </div>
             <div>
@@ -541,8 +516,8 @@ const PerformanceReviewForm = ({}) => {
               <input
                 type="text"
                 name="managerComment"
-                disabled
-                // value={formData.managerComment}
+                disabled={isEmployee}
+                value={review?.managerComment}
                 onChange={handleInputChange}
                 placeholder="Manager Comment"
                 className="w-full p-2 mb-4 border rounded"
@@ -567,24 +542,24 @@ const PerformanceReviewForm = ({}) => {
                 <label className="block mb-2">Major Accomplishments</label>
                 <input
                   type="text"
-                  name="majorAccomplishments"
-                  // value={formData.majorAccomplishments}
+                  name="self_majorAccomplishments"
+                  value={review?.self_majorAccomplishments}
                   onChange={handleInputChange}
                   placeholder="Major Accomplishments"
                   className="w-full p-2 mb-4 border rounded"
-                  disabled
+                  disabled={isSupervisor}
                 />
               </div>
               <div>
                 <label className="block mb-2">Areas for Improvement</label>
                 <input
                   type="text"
-                  name="areasForImprovement"
-                  // value={formData.areasForImprovement}
+                  name="self_areasForImprovement"
+                  value={review?.self_areasForImprovement}
                   onChange={handleInputChange}
                   placeholder="Areas for Improvement"
                   className="w-full p-2 mb-8 border rounded"
-                  disabled
+                  disabled={isSupervisor}
                 />
               </div>
             </div>
@@ -594,11 +569,11 @@ const PerformanceReviewForm = ({}) => {
                 <label className="block mb-2">Major Accomplishments</label>
                 <input
                   type="text"
-                  name="majorAccomplishments"
-                  // value={formData.majorAccomplishments}
+                  name="manag_majorAccomplishments"
+                  value={review?.manag_majorAccomplishments}
                   onChange={handleInputChange}
                   placeholder="Major Accomplishments"
-                  disabled
+                  disabled={isEmployee}
                   className="w-full p-2 mb-4 border rounded"
                 />
               </div>
@@ -606,22 +581,21 @@ const PerformanceReviewForm = ({}) => {
                 <label className="block mb-2">Areas for Improvement</label>
                 <input
                   type="text"
-                  name="areasForImprovement"
-                  // value={formData.areasForImprovement}
+                  name="manag_areasForImprovement"
+                  value={review?.manag_areasForImprovement}
                   onChange={handleInputChange}
                   placeholder="Areas for Improvement"
                   className="w-full p-2 mb-4 border rounded"
-                  disabled
+                  disabled={isEmployee}
                 />
               </div>
             </div>
             <label className="block mb-2">Overall Rating</label>
             <select
               name="overallRating"
-              // value={formData.overallRating}
+              value={review?.overallRating}
               onChange={handleInputChange}
               className="w-full p-2 mb-4 border rounded"
-              disabled
             >
               <option value="">Select Overall Rating</option>
               <option value="Significantly Exceeds Requirements (SER)">
@@ -646,51 +620,51 @@ const PerformanceReviewForm = ({}) => {
             <input
               type="text"
               name="managerSignature"
-              // value={formData.managerSignature}
+              value={review?.managerSignature}
               onChange={handleInputChange}
               placeholder="Manager Signature"
               className="w-full p-2 mb-4 border rounded"
-              disabled
+              disabled={isEmployee}
             />
             <label className="block mb-2">Date</label>
             <input
               type="date"
-              name="date"
-              // value={formData.date}
+              name="managerDate"
+              value={review?.managerDate}
               onChange={handleInputChange}
               placeholder="Date"
               className="w-full p-2 mb-4 border rounded"
-              disabled
+              disabled={isEmployee}
             />
             <label className="block mb-2">Employee Signature</label>
             <input
               type="text"
               name="employeeSignature"
-              // value={formData.employeeSignature}
+              value={review?.employeeSignature}
               onChange={handleInputChange}
               placeholder="Employee Signature"
               className="w-full p-2 mb-4 border rounded"
-              disabled
+              disabled={isSupervisor}
             />
             <label className="block mb-2">Date</label>
             <input
               type="date"
-              name="date"
-              // value={formData.date}
+              name="employeeDate"
+              value={review?.employeeDate}
               onChange={handleInputChange}
               placeholder="Date"
               className="w-full p-2 mb-4 border rounded"
-              disabled
+              disabled={isSupervisor}
             />
             <label className="block mb-2">Employee Comments</label>
             <input
               type="text"
               name="employeeComments"
-              // value={formData.employeeComments}
+              value={review?.employeeComments}
               onChange={handleInputChange}
               placeholder="Employee Comments"
               className="w-full p-2 mb-4 border rounded"
-              disabled
+              disabled={isSupervisor}
             />
           </>
         )}
@@ -700,10 +674,10 @@ const PerformanceReviewForm = ({}) => {
         type="submit"
         className="w-full py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-300"
       >
-        Submit
+        Update
       </button>
     </form>
   );
 };
 
-export default PerformanceReviewForm;
+export default UpdatePerformanceReview;
