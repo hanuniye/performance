@@ -7,12 +7,14 @@ import { Search, Add } from "@mui/icons-material";
 import Spinner from "../../components/Spinner";
 import DataTable from "react-data-table-component";
 import { customStyle } from "../../utils/costumStyle";
+import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
 
 const PerformanceReviewsList = () => {
   const [performanceReviews, setPerformanceReviews] = useState();
   const [filterPerformanceReviews, setFilterPerformanceReviews] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const Axios = usePrivateAxios();
+  const { auth } = useGlobalProvider();
 
   const columns = [
     {
@@ -27,7 +29,9 @@ const PerformanceReviewsList = () => {
     },
     {
       name: "Status",
-      selector: (row) => row?.status,
+      cell: (row) => {
+       return  <div className={`${row?.status} rounded-full px-2`}>{row?.status}</div>;
+      },
       sortable: true,
     },
     {
@@ -95,16 +99,18 @@ const PerformanceReviewsList = () => {
             Manage Performance Review
           </h1>
           <div className="flex items-start justify-between">
-            <CustomButton
-              url="/performance_reviews/new"
-              text="Add new"
-              icon={
-                <Add
-                  className="text-white icon font-semibold"
-                  style={{ fontSize: "18px" }}
-                />
-              }
-            />
+            {auth?.role === "EMPLOYEE" && (
+              <CustomButton
+                url="/performance_reviews/new"
+                text="Add new"
+                icon={
+                  <Add
+                    className="text-white icon font-semibold"
+                    style={{ fontSize: "18px" }}
+                  />
+                }
+              />
+            )}
             <div className="border-2 px-2 md:block">
               <input
                 type="text"

@@ -74,6 +74,7 @@ const ListSupervisor = () => {
       const { data } = await Axios.delete(`/supervisor/${id}`);
       if (data?.msg) {
         setSupervisors((prev) => prev.filter((item) => item.id !== id));
+        setFilterSupervisors((prev) => prev.filter((item) => item.id !== id));
       }
     } catch (error) {
       if (error.response) {

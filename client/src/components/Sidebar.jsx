@@ -30,8 +30,8 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar flex flex-col py-5 shadow-md w-52 h-[100vh]">
-      <div className="logo pb-3 border-b-2 text-center">
-        <h5 className="text-blue-400 font-bold font-poppins">Han Admin</h5>
+      <div className="logo pb-3 border-b-2 flex justify-center items-center">
+        <img src="/care2.png" alt="logo" className="h-6 w-[100px]" />
       </div>
 
       {/* center */}
@@ -44,7 +44,7 @@ const Sidebar = () => {
           <Link to="/">
             <div className="flex items-center pl-7 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer">
               <Dashboard
-                className="text-blue-400 icon"
+                className="text-orange-500 icon"
                 style={{ fontSize: "18px" }}
               />
               <h6 className="text-sm font-medium text-blackLight md:text-md">
@@ -70,7 +70,7 @@ const Sidebar = () => {
               >
                 <div className="flex items-center space-x-3">
                   <Leaderboard
-                    className="text-blue-400 icon"
+                    className="text-orange-500 icon"
                     style={{ fontSize: "18px" }}
                   />
                   <h6 className="text-sm font-medium text-blackLight md:text-md">
@@ -90,7 +90,7 @@ const Sidebar = () => {
             >
               <div className="flex items-center space-x-3">
                 <ChatRounded
-                  className="text-blue-400 icon"
+                  className="text-orange-500 icon"
                   style={{ fontSize: "18px" }}
                 />
                 <h6 className="text-sm font-medium text-blackLight md:text-md">
@@ -110,7 +110,7 @@ const Sidebar = () => {
               >
                 <div className="flex items-center space-x-3">
                   <BookTwoTone
-                    className="text-blue-400 icon"
+                    className="text-orange-500 icon"
                     style={{ fontSize: "18px" }}
                   />
                   <h6 className="text-sm font-medium text-blackLight md:text-md">
@@ -131,7 +131,7 @@ const Sidebar = () => {
               >
                 <div className="flex items-center space-x-3">
                   <People
-                    className="text-blue-400 icon"
+                    className="text-orange-500 icon"
                     style={{ fontSize: "18px" }}
                   />
                   <h6 className="text-sm font-medium text-blackLight md:text-md">

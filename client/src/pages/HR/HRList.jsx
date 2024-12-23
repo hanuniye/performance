@@ -75,6 +75,7 @@ const HRList = () => {
       const { data } = await Axios.delete(`/HR/${id}`);
       if (data?.msg) {
         setHRS((prev) => prev.filter((item) => item.id !== id));
+        setFilterHRS((prev) => prev.filter((item) => item.id !== id));
       }
     } catch (error) {
       if (error.response) {

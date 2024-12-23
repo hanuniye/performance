@@ -14,15 +14,15 @@
     right: -4px;
 }
 
-.active{
+.APPROVED{
     background-color: rgba(0, 128, 0, 0.2);
     color: green;
 }
-.pending{
-    background-color: rgba(225, 217, 0, 0.2);
+.IN_REVIEW{
+    background-color: rgba(255, 248, 36, 0.2);
     color: goldenrod;
 }
-.passive{
+.SUBMITTED{
     background-color: rgba(225, 0, 0, 0.1);
     color: crimson;
 }

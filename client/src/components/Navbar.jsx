@@ -57,8 +57,8 @@ const Navbar = () => {
             onClick={toggleDropdown}
           >
             <img
-              className="w-10 h-10 rounded-full cursor-pointer"
-              src={image}
+              className="w-10 h-10 rounded-full cursor-pointer border"
+              src='/care.png'
               alt="profile-image"
             />
           </div>

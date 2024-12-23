@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
 import Spinner from "../../components/Spinner";
@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
 
 const PerformanceReviewDetails = () => {
   const { id } = useParams();
@@ -14,6 +16,7 @@ const PerformanceReviewDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const axios = usePrivateAxios();
   const { auth } = useGlobalProvider();
+  const componentRef = useRef();
 
   useEffect(() => {
     const fetchReview = async () => {
@@ -37,12 +40,29 @@ const PerformanceReviewDetails = () => {
 
   const handleApprove = async () => {
     try {
-      await axios.post(`/api/performanceReview/${id}/approve`);
-      alert("Performance review approved successfully");
-      //   navigate.push("/");
+      const response = await axios.post(`/performance_review/${id}/approve`);
+      setReview(response.data?.msg);
+      toast.success("Performance review approved successfully");
     } catch (error) {
-      console.error("Error approving performance review:", error);
-      alert("Error approving performance review");
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleReview = async () => {
+    try {
+      const response = await axios.post(`/performance_review/${id}/in-review`);
+      setReview(response.data?.msg);
+      toast.success("Performance is In-Review");
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        console.log(error);
+      }
     }
   };
 
@@ -50,128 +70,156 @@ const PerformanceReviewDetails = () => {
     navigate(`/performance_reviews/${id}/update`);
   };
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Performance Review Details",
+    onAfterPrint: () => toast.success("Printed successfully!"),
+  });
+
   const handleGeneratePDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text("Performance Review Details", 14, 22);
-    doc.setFontSize(12);
-    doc.text(`Employee Name: ${review.employee.name}`, 14, 32);
-    doc.text(`Title: ${review.title || "Title"}`, 14, 42);
-    doc.text(`Manager: ${review.manager || "Manager"}`, 14, 52);
+    Swal.fire({
+      title: "Generate PDF",
+      text: "Please check if the Letter approved?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Done",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Performance Review Details", 14, 22);
+        doc.setFontSize(12);
+        doc.text(`Employee Name: ${review.employee.name}`, 14, 32);
+        doc.text(`Title: ${review.title || "Title"}`, 14, 42);
+        doc.text(`Manager: ${review.manager || "Manager"}`, 14, 52);
 
-    review.goals.forEach((goal, index) => {
-      doc.text(`Goal ${index + 1}`, 14, 62 + index * 10);
-      doc.text(
-        `Global Impact Area: ${goal.globalImpactArea || "Global Impact Area"}`,
-        14,
-        72 + index * 10
-      );
-      doc.text(
-        `Core Competency: ${goal.coreCompetency || "Core Competency"}`,
-        14,
-        82 + index * 10
-      );
-      doc.text(
-        `Functional Competency: ${
-          goal.functionalCompetency || "Functional Competency"
-        }`,
-        14,
-        92 + index * 10
-      );
-      doc.text(
-        `Key Tasks: ${goal.keyTasks || "Key Tasks"}`,
-        14,
-        102 + index * 10
-      );
-      doc.text(
-        `Why Important: ${goal.whyImportant || "Why Important"}`,
-        14,
-        112 + index * 10
-      );
-      doc.text(
-        `When Accomplish: ${
-          goal.whenAccomplish
-            ? new Date(goal.whenAccomplish).toLocaleDateString()
-            : "When Accomplish"
-        }`,
-        14,
-        122 + index * 10
-      );
-      doc.text(
-        `Employee Feedback: ${goal.employeeFeedback || "Employee Feedback"}`,
-        14,
-        132 + index * 10
-      );
-      doc.text(
-        `Manager Feedback: ${goal.managerFeedback || "Manager Feedback"}`,
-        14,
-        142 + index * 10
-      );
-      doc.text(
-        `Self Rating: ${goal.selfRating || "Self Rating"}`,
-        14,
-        152 + index * 10
-      );
-      doc.text(
-        `Manager Rating: ${goal.managerRating || "Manager Rating"}`,
-        14,
-        162 + index * 10
-      );
+        review.goals.forEach((goal, index) => {
+          doc.text(`Goal ${index + 1}`, 14, 62 + index * 10);
+          doc.text(
+            `Global Impact Area: ${
+              goal.globalImpactArea || "Global Impact Area"
+            }`,
+            14,
+            72 + index * 10
+          );
+          doc.text(
+            `Core Competency: ${goal.coreCompetency || "Core Competency"}`,
+            14,
+            82 + index * 10
+          );
+          doc.text(
+            `Functional Competency: ${
+              goal.functionalCompetency || "Functional Competency"
+            }`,
+            14,
+            92 + index * 10
+          );
+          doc.text(
+            `Key Tasks: ${goal.keyTasks || "Key Tasks"}`,
+            14,
+            102 + index * 10
+          );
+          doc.text(
+            `Why Important: ${goal.whyImportant || "Why Important"}`,
+            14,
+            112 + index * 10
+          );
+          doc.text(
+            `When Accomplish: ${
+              goal.whenAccomplish
+                ? new Date(goal.whenAccomplish).toLocaleDateString()
+                : "When Accomplish"
+            }`,
+            14,
+            122 + index * 10
+          );
+          doc.text(
+            `Employee Feedback: ${
+              goal.employeeFeedback || "Employee Feedback"
+            }`,
+            14,
+            132 + index * 10
+          );
+          doc.text(
+            `Manager Feedback: ${goal.managerFeedback || "Manager Feedback"}`,
+            14,
+            142 + index * 10
+          );
+          doc.text(
+            `Self Rating: ${goal.selfRating || "Self Rating"}`,
+            14,
+            152 + index * 10
+          );
+          doc.text(
+            `Manager Rating: ${goal.managerRating || "Manager Rating"}`,
+            14,
+            162 + index * 10
+          );
+        });
+
+        doc.text(
+          `Employee Comment: ${review.employeeComment || "Employee Comment"}`,
+          14,
+          172
+        );
+        doc.text(
+          `Manager Comment: ${review.managerComment || "Manager Comment"}`,
+          14,
+          182
+        );
+        doc.text(
+          `Major Accomplishments: ${
+            review.majorAccomplishments || "Major Accomplishments"
+          }`,
+          14,
+          192
+        );
+        doc.text(
+          `Areas for Improvement: ${
+            review.areasForImprovement || "Areas for Improvement"
+          }`,
+          14,
+          202
+        );
+        doc.text(
+          `Overall Rating: ${review.overallRating || "Overall Rating"}`,
+          14,
+          212
+        );
+        doc.text(
+          `Manager Signature: ${
+            review.managerSignature || "Manager Signature"
+          }`,
+          14,
+          222
+        );
+        doc.text(
+          `Date: ${
+            review.date ? new Date(review.date).toLocaleDateString() : "Date"
+          }`,
+          14,
+          232
+        );
+        doc.text(
+          `Employee Signature: ${
+            review.employeeSignature || "Employee Signature"
+          }`,
+          14,
+          242
+        );
+        doc.text(
+          `Employee Comments: ${
+            review.employeeComments || "Employee Comments"
+          }`,
+          14,
+          252
+        );
+
+        doc.save("performance_review.pdf");
+      }
     });
-
-    doc.text(
-      `Employee Comment: ${review.employeeComment || "Employee Comment"}`,
-      14,
-      172
-    );
-    doc.text(
-      `Manager Comment: ${review.managerComment || "Manager Comment"}`,
-      14,
-      182
-    );
-    doc.text(
-      `Major Accomplishments: ${
-        review.majorAccomplishments || "Major Accomplishments"
-      }`,
-      14,
-      192
-    );
-    doc.text(
-      `Areas for Improvement: ${
-        review.areasForImprovement || "Areas for Improvement"
-      }`,
-      14,
-      202
-    );
-    doc.text(
-      `Overall Rating: ${review.overallRating || "Overall Rating"}`,
-      14,
-      212
-    );
-    doc.text(
-      `Manager Signature: ${review.managerSignature || "Manager Signature"}`,
-      14,
-      222
-    );
-    doc.text(
-      `Date: ${
-        review.date ? new Date(review.date).toLocaleDateString() : "Date"
-      }`,
-      14,
-      232
-    );
-    doc.text(
-      `Employee Signature: ${review.employeeSignature || "Employee Signature"}`,
-      14,
-      242
-    );
-    doc.text(
-      `Employee Comments: ${review.employeeComments || "Employee Comments"}`,
-      14,
-      252
-    );
-
-    doc.save("performance_review.pdf");
   };
 
   if (isLoading) {
@@ -184,119 +232,172 @@ const PerformanceReviewDetails = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Performance Review Details</h1>
       <div className="bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-6">Employee Information</h2>
-        <div className="mb-4">
-          <p className="text-lg mb-2">
-            <strong>Name:</strong> {review?.employee?.name}
-          </p>
-          <p className="text-lg mb-2">
-            <strong>Title:</strong> {review?.title}
-          </p>
-          <p className="text-lg mb-2">
-            <strong>Manager:</strong> {review?.manager}
-          </p>
-          <p className="text-lg mb-2">
-            <strong>Location:</strong> {review?.location}
-          </p>
-        </div>
+        <div ref={componentRef} className="bg-white p-8 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            Performance Review Details
+          </h2>
+          <div className="mb-4 flex items-start justify-between">
+            <div className="right">
+              <p className="text-lg mb-2">
+                <strong>Name:</strong> {review?.employee?.name}
+              </p>
+              <p className="text-lg mb-2">
+                <strong>Title:</strong> {review?.title}
+              </p>
+              <p className="text-lg mb-2">
+                <strong>Manager:</strong> {review?.manager}
+              </p>
+              <p className="text-lg mb-2">
+                <strong>Location:</strong> {review?.location}
+              </p>
+            </div>
+            <div className="left overflow-hidden">
+              <img src="/care.png" alt="" className="w-[150px] h-[150px]" />
+            </div>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-6">Goals</h2>
-        {review?.goals?.map((goal, index) => (
-          <div key={index} className="mb-6 p-6 border rounded-lg bg-gray-50">
-            <h3 className="text-xl font-semibold mb-4">Goal {index + 1}</h3>
+          <h2 className="text-2xl font-semibold mt-8 mb-6">Goals</h2>
+          {review?.goals?.map((goal, index) => (
+            <div key={index} className="mb-6 p-6 border rounded-lg bg-gray-50">
+              <h3 className="text-xl font-semibold mb-4">Goal {index + 1}</h3>
+              <p className="text-lg mb-4">
+                <strong>Global Impact Area:</strong> {goal?.globalImpactArea}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Core Competency:</strong> {goal?.coreCompetency}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Functional Competency:</strong>{" "}
+                {goal?.functionalCompetency}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Key Tasks:</strong> {goal?.keyTasks}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Why Important:</strong> {goal?.whyImportant}
+              </p>
+              <p className="text-l mb-4">
+                <strong>When Accomplish:</strong>{" "}
+                {goal?.whenAccomplish
+                  ? new Date(goal?.whenAccomplish).toLocaleDateString()
+                  : ""}
+              </p>
+              <div className="mb-4">
+                <p className="text-lg mb-2">
+                  <strong>Quarterly Updates:</strong>
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h5 className="font-semibold mb-2">Employee Updates</h5>
+                    <p className="text-lg mb-2">
+                      <strong>Q1:</strong> {goal.employeeQ1}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <strong>Q2:</strong> {goal.employeeQ2}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <strong>Q3:</strong> {goal.employeeQ3}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <strong>Q4:</strong> {goal.employeeQ4}
+                    </p>
+                  </div>
+                  <div>
+                    <h5 className="font-semibold mb-2">Manager Updates</h5>
+                    <p className="text-lg mb-2">
+                      <strong>Q1:</strong> {goal.managerQ1}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <strong>Q2:</strong> {goal.managerQ2}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <strong>Q3:</strong> {goal.managerQ3}
+                    </p>
+                    <p className="text-lg mb-2">
+                      <strong>Q4:</strong> {goal.managerQ4}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-lg mb-4">
+                <strong>Employee Feedback:</strong> {goal?.employeeFeedback}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Manager Feedback:</strong> {goal?.managerFeedback}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Self Rating:</strong> {goal?.selfRating}
+              </p>
+              <p className="text-lg mb-4">
+                <strong>Manager Rating:</strong> {goal?.managerRating}
+              </p>
+            </div>
+          ))}
+
+          <h2 className="text-2xl font-semibold mt-8 mb-6">Mid-Year Review</h2>
+          <div className="mb-4">
             <p className="text-lg mb-4">
-              <strong>Global Impact Area:</strong> {goal?.globalImpactArea}
+              <strong>Employee Comment:</strong> {review?.employeeComment}
             </p>
             <p className="text-lg mb-4">
-              <strong>Core Competency:</strong> {goal?.coreCompetency}
+              <strong>Manager Comment:</strong> {review?.managerComment}
+            </p>
+          </div>
+
+          <h2 className="text-2xl font-semibold mt-8 mb-6">
+            Year-End Assessment
+          </h2>
+          <div className="mb-4">
+            <h2 className="text-xl mb-2 ">
+              <strong>Self Assessment</strong> {review?.majorAccomplishments}
+            </h2>
+            <p className="text-lg mb-4">
+              <strong>Major Accomplishments:</strong>{" "}
+              {review?.self_majorAccomplishments}
+            </p>
+            <p className="text-lg mb-7">
+              <strong>Areas for Improvement:</strong>{" "}
+              {review?.self_areasForImprovement}
+            </p>
+            <h2 className="text-xl mb-2 ">
+              <strong>Manager Assessment</strong> {review?.majorAccomplishments}
+            </h2>
+            <p className="text-lg mb-4">
+              <strong>Major Accomplishments:</strong>{" "}
+              {review?.manag_majorAccomplishments}
             </p>
             <p className="text-lg mb-4">
-              <strong>Functional Competency:</strong>{" "}
-              {goal?.functionalCompetency}
+              <strong>Areas for Improvement:</strong>{" "}
+              {review?.manag_areasForImprovement}
             </p>
             <p className="text-lg mb-4">
-              <strong>Key Tasks:</strong> {goal?.keyTasks}
+              <strong>Overall Rating:</strong> {review?.overallRating}
             </p>
             <p className="text-lg mb-4">
-              <strong>Why Important:</strong> {goal?.whyImportant}
+              <strong>Manager Signature:</strong> {review?.managerSignature}
             </p>
-            <p className="text-l mb-4">
-              <strong>When Accomplish:</strong>{" "}
-              {goal?.whenAccomplish
-                ? new Date(goal?.whenAccomplish).toLocaleDateString()
+            <p className="text-lg mb-4">
+              <strong>Date:</strong>{" "}
+              {review?.managerDate
+                ? new Date(review?.managerDate).toLocaleDateString()
                 : ""}
             </p>
             <p className="text-lg mb-4">
-              <strong>Employee Feedback:</strong> {goal?.employeeFeedback}
+              <strong>Employee Signature:</strong> {review?.employeeSignature}
             </p>
             <p className="text-lg mb-4">
-              <strong>Manager Feedback:</strong> {goal?.managerFeedback}
+              <strong>Date:</strong>{" "}
+              {review?.employeeDate
+                ? new Date(review?.employeeDate).toLocaleDateString()
+                : ""}
             </p>
             <p className="text-lg mb-4">
-              <strong>Self Rating:</strong> {goal?.selfRating}
+              <strong>Employee Comments:</strong> {review?.employeeComments}
             </p>
             <p className="text-lg mb-4">
-              <strong>Manager Rating:</strong> {goal?.managerRating}
+              <strong>Status:</strong> {review?.status}
             </p>
           </div>
-        ))}
-
-        <h2 className="text-2xl font-semibold mt-8 mb-6">Mid-Year Review</h2>
-        <div className="mb-4">
-          <p className="text-lg mb-4">
-            <strong>Employee Comment:</strong> {review?.employeeComment}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Manager Comment:</strong> {review?.managerComment}
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-6">
-          Year-End Assessment
-        </h2>
-        <div className="mb-4">
-          <h2 className="text-xl mb-2 ">
-            <strong>Self Assessment</strong> {review?.majorAccomplishments}
-          </h2>
-          <p className="text-lg mb-4">
-            <strong>Major Accomplishments:</strong>{" "}
-            {review?.majorAccomplishments}
-          </p>
-          <p className="text-lg mb-7">
-            <strong>Areas for Improvement:</strong>{" "}
-            {review?.areasForImprovement}
-          </p>
-          <h2 className="text-xl mb-2 ">
-            <strong>Manager Assessment</strong> {review?.majorAccomplishments}
-          </h2>
-          <p className="text-lg mb-4">
-            <strong>Major Accomplishments:</strong>{" "}
-            {review?.majorAccomplishments}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Areas for Improvement:</strong>{" "}
-            {review?.areasForImprovement}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Overall Rating:</strong> {review?.overallRating}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Manager Signature:</strong> {review?.managerSignature}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Date:</strong>{" "}
-            {review?.date ? new Date(review?.date).toLocaleDateString() : ""}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Employee Signature:</strong> {review?.employeeSignature}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Date:</strong>{" "}
-            {review?.date ? new Date(review?.date).toLocaleDateString() : ""}
-          </p>
-          <p className="text-lg mb-4">
-            <strong>Employee Comments:</strong> {review?.employeeComments}
-          </p>
         </div>
 
         <div className="flex justify-end mt-8">
@@ -317,12 +418,21 @@ const PerformanceReviewDetails = () => {
             </button>
           )}
 
+          {auth?.role === "HR" && review?.status === "APPROVED" && (
+            <button
+              onClick={handleReview}
+              className="ml-4 py-2 px-6 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300"
+            >
+              In-Review
+            </button>
+          )}
+
           {auth?.role === "HR" && (
             <button
-              onClick={handleGeneratePDF}
+              onClick={handlePrint}
               className="ml-4 py-2 px-6 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-300"
             >
-              Generate PDF
+              Print
             </button>
           )}
         </div>

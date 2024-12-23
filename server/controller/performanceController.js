@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient, Role, Status } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -157,61 +157,118 @@ export const getSinglePerformanceReview = async (req, res) => {
   }
 };
 
-export const updatePerformanceReview = async (req, res) => {
+export const getSinglePerformanceReviewForUpdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(404).json({ error: "Performance ID is required" });
+    }
+
+    const performanceReviews = await prisma.performanceReview.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        goals: {
+          select: {
+            id: false,
+            performanceReviewId: false,
+            globalImpactArea: true,
+            coreCompetency: true,
+            functionalCompetency: true,
+            keyTasks: true,
+            whyImportant: true,
+            whenAccomplish: true,
+            employeeQ1: true,
+            employeeQ2: true,
+            employeeQ3: true,
+            employeeQ4: true,
+            managerQ1: true,
+            managerQ2: true,
+            managerQ3: true,
+            managerQ4: true,
+            employeeFeedback: true,
+            managerFeedback: true,
+            selfRating: true,
+            managerRating: true,
+            createdAt: false,
+            updatedAt: false,
+            performanceReview: false,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({ msg: performanceReviews });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const approvePerformanceReview = async (req, res) => {
   const { id } = req.params;
-  const { employeeId, supervisorId, name, title, manager, goals, employeeComment, managerComment, majorAccomplishments, areasForImprovement, overallRating, managerSignature, date, employeeSignature, employeeComments } = req.body;
 
   try {
     const updatedReview = await prisma.performanceReview.update({
       where: { id },
       data: {
-        employeeId,
-        supervisorId,
-        name,
-        title,
-        manager,
-        employeeComment,
-        managerComment,
-        majorAccomplishments,
-        areasForImprovement,
-        overallRating,
-        managerSignature,
-        date: new Date(date),
-        employeeSignature,
-        employeeComments,
-        goals: {
-          deleteMany: {},
-          create: goals.map(goal => ({
-            globalImpactArea: goal.globalImpactArea,
-            coreCompetency: goal.coreCompetency,
-            functionalCompetency: goal.functionalCompetency,
-            keyTasks: goal.keyTasks,
-            whyImportant: goal.whyImportant,
-            whenAccomplish: new Date(goal.whenAccomplish),
-            employeeFeedback: goal.employeeFeedback,
-            managerFeedback: goal.managerFeedback,
-            selfRating: goal.selfRating,
-            managerRating: goal.managerRating,
-            quarterlyUpdates: {
-              create: {
-                q1: goal.quarterlyUpdates.q1,
-                q2: goal.quarterlyUpdates.q2,
-                q3: goal.quarterlyUpdates.q3,
-                q4: goal.quarterlyUpdates.q4,
-                managerQ1: goal.quarterlyUpdates.managerQ1,
-                managerQ2: goal.quarterlyUpdates.managerQ2,
-                managerQ3: goal.quarterlyUpdates.managerQ3,
-                managerQ4: goal.quarterlyUpdates.managerQ4,
+        status: Status.APPROVED,
+      },
+      include: {
+        goals: true,
+        employee: {
+          select: {
+            name: true,
+            supervisor: {
+              select: {
+                name: true,
               },
             },
-          })),
+          },
         },
       },
     });
 
-    return res.status(StatusCodes.OK).json({ msg: 'Performance review updated successfully', updatedReview });
+    return res.status(StatusCodes.OK).json({ msg: updatedReview });
   } catch (error) {
     console.error(error);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
+  }
+};
+
+export const reviewPerformanceReview = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const updatedReview = await prisma.performanceReview.update({
+      where: { id },
+      data: {
+        status: Status.IN_REVIEW,
+      },
+      include: {
+        goals: true,
+        employee: {
+          select: {
+            name: true,
+            supervisor: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return res.status(StatusCodes.OK).json({ msg: updatedReview });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
   }
 };

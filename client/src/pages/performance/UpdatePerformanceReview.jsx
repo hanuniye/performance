@@ -18,14 +18,14 @@ const UpdatePerformanceReview = () => {
 
   const [isMidYearCollapsed, setIsMidYearCollapsed] = useState(true);
   const [isYearEndCollapsed, setIsYearEndCollapsed] = useState(true);
+  console.log(review)
 
   useEffect(() => {
     const fetchReview = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`/performance_review/${id}`);
+        const response = await axios.get(`/performance_review/${id}/forUpdate`);
         setReview(response.data?.msg);
-        console.log(response.data?.msg);
       } catch (error) {
         if (error.response) {
           toast.error(error.response.data.error);
@@ -65,15 +65,21 @@ const UpdatePerformanceReview = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(review)
-    // try {
-    //   await axios.put(`/performance_review/${id}`, review);
-    //   alert("Performance review updated successfully");
-    //   //   navigate.push(`/performanceReview/${id}`);
-    // } catch (error) {
-    //   console.error(error);
-    //   alert("Error updating performance review");
-    // }
+    try {
+      await axios.patch(`/performance_review/${id}/`, JSON.stringify(review), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      toast.success("Performance_review updated successfully!");
+      navigate(`/performance_reviews/${id}/details`);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        console.log(error.message);
+      }
+    }
   };
 
   if (isLoading) {
@@ -93,7 +99,7 @@ const UpdatePerformanceReview = () => {
         <label className="block mb-2">(FY)</label>
         <select
           name="fy"
-          value={review?.fy}
+          value={review?.fy || ""}
           onChange={handleInputChange}
           className="w-full p-2 mb-4 border rounded"
           required
@@ -113,7 +119,7 @@ const UpdatePerformanceReview = () => {
         <input
           type="text"
           name="name"
-          value={review?.name}
+          value={review?.name || ""}
           onChange={handleInputChange}
           placeholder="Name"
           className="w-full p-2 mb-4 border rounded"
@@ -124,7 +130,7 @@ const UpdatePerformanceReview = () => {
         <input
           type="text"
           name="title"
-          value={review?.title}
+          value={review?.title || ""}
           onChange={handleInputChange}
           placeholder="Title"
           className="w-full p-2 mb-4 border rounded"
@@ -135,7 +141,7 @@ const UpdatePerformanceReview = () => {
         <input
           type="text"
           name="manager"
-          value={review?.manager}
+          value={review?.manager || ""}
           onChange={handleInputChange}
           placeholder="Manager"
           className="w-full p-2 mb-4 border rounded"
@@ -146,7 +152,7 @@ const UpdatePerformanceReview = () => {
         <input
           type="text"
           name="location"
-          value={review?.location}
+          value={review?.location || ""}
           onChange={handleInputChange}
           placeholder="Location"
           className="w-full p-2 mb-10 border rounded"
@@ -171,7 +177,7 @@ const UpdatePerformanceReview = () => {
             <label className="block mb-2">Global Impact Area</label>
             <select
               name="globalImpactArea"
-              value={goal?.globalImpactArea}
+              value={goal?.globalImpactArea || ""}
               onChange={(e) => handleInputChange(e, "goals", index)}
               className="w-full p-2 mb-4 border rounded"
               required
@@ -186,7 +192,7 @@ const UpdatePerformanceReview = () => {
             <label className="block mb-2">Core Competency</label>
             <select
               name="coreCompetency"
-              value={goal?.coreCompetency}
+              value={goal?.coreCompetency || ""}
               onChange={(e) => handleInputChange(e, "goals", index)}
               className="w-full p-2 mb-4 border rounded"
               required
@@ -200,7 +206,7 @@ const UpdatePerformanceReview = () => {
             <input
               type="text"
               name="functionalCompetency"
-              value={goal?.functionalCompetency}
+              value={goal?.functionalCompetency || ""}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Functional Competency"
               className="w-full p-2 mb-4 border rounded"
@@ -211,7 +217,7 @@ const UpdatePerformanceReview = () => {
             <input
               type="text"
               name="keyTasks"
-              value={goal?.keyTasks}
+              value={goal?.keyTasks || ""}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Key Tasks"
               className="w-full p-2 mb-4 border rounded"
@@ -222,7 +228,7 @@ const UpdatePerformanceReview = () => {
             <input
               type="text"
               name="whyImportant"
-              value={goal?.whyImportant}
+              value={goal?.whyImportant || ""}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Why is this important?"
               className="w-full p-2 mb-4 border rounded"
@@ -233,169 +239,103 @@ const UpdatePerformanceReview = () => {
             <input
               type="date"
               name="whenAccomplish"
-              value={goal?.whenAccomplish}
+              value={
+                goal?.whenAccomplish
+                  ? new Date(goal?.whenAccomplish).toISOString().split("T")[0]
+                  : ""
+              }
               onChange={(e) => handleInputChange(e, "goals", index)}
               className="w-full p-2 mb-4 border rounded"
               required
               disabled={isSupervisor}
             />
-
-            {goal?.quarterlyUpdates?.map((update, subIndex) => (
-              <div
-                key={subIndex}
-                className="mb-4 p-4 border rounded-lg bg-white"
-              >
-                <h4 className="text-lg font-medium mb-2">Quarterly Updates</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h5 className="font-semibold mb-2">Employee Updates</h5>
-                    <input
-                      type="text"
-                      name="q1"
-                      value={update?.employeeUpdates?.q1}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q1"
-                      className="w-full p-2 mb-2 border rounded"
-                      required
-                      disabled={isSupervisor}
-                    />
-                    <input
-                      type="text"
-                      name="q2"
-                      value={update?.employeeUpdates?.q2}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q2"
-                      className="w-full p-2 mb-2 border rounded"
-                      required
-                      disabled={isSupervisor}
-                    />
-                    <input
-                      type="text"
-                      name="q3"
-                      value={update?.employeeUpdates?.q3}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q3"
-                      className="w-full p-2 mb-2 border rounded"
-                      required
-                      disabled={isSupervisor}
-                    />
-                    <input
-                      type="text"
-                      name="q4"
-                      value={update?.employeeUpdates?.q4}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q4"
-                      className="w-full p-2 mb-2 border rounded"
-                      required
-                      disabled={isSupervisor}
-                    />
-                  </div>
-                  <div>
-                    <h5 className="font-semibold mb-2">Manager Updates</h5>
-                    <input
-                      type="text"
-                      name="q1"
-                      value={update?.managerUpdates?.q1}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Manager Q1"
-                      className="w-full p-2 mb-2 border rounded"
-                      disabled
-                    />
-                    <input
-                      type="text"
-                      name="q2"
-                      value={update?.managerUpdates?.q2}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Manager Q2"
-                      className="w-full p-2 mb-2 border rounded"
-                      disabled={isEmployee}
-                    />
-                    <input
-                      type="text"
-                      name="q3"
-                      value={update?.managerUpdates?.q3}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Manager Q3"
-                      className="w-full p-2 mb-2 border rounded"
-                      disabled={isEmployee}
-                    />
-                    <input
-                      type="text"
-                      name="q4"
-                      value={update?.managerUpdates?.q4}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Manager Q4"
-                      className="w-full p-2 mb-2 border rounded"
-                      disabled={isEmployee}
-                    />
-                  </div>
+            <div className="mb-4 p-4 border rounded-lg bg-white">
+              <h4 className="text-lg font-medium mb-2">Quarterly Updates</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-semibold mb-2">Employee Updates</h5>
+                  <input
+                    type="text"
+                    name="employeeQ1"
+                    value={goal?.employeeQ1 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Employee Q1"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                    disabled={isSupervisor}
+                  />
+                  <input
+                    type="text"
+                    name="employeeQ2"
+                    value={goal?.employeeQ2 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Employee Q2"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                    disabled={isSupervisor}
+                  />
+                  <input
+                    type="text"
+                    name="employeeQ3"
+                    value={goal?.employeeQ3 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Employee Q3"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                    disabled={isSupervisor}
+                  />
+                  <input
+                    type="text"
+                    name="employeeQ4"
+                    value={goal?.employeeQ4 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Employee Q4"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                    disabled={isSupervisor}
+                  />
+                </div>
+                <div>
+                  <h5 className="font-semibold mb-2">Manager goals</h5>
+                  <input
+                    type="text"
+                    name="managerQ1"
+                    value={goal?.managerQ1 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Manager Q1"
+                    className="w-full p-2 mb-2 border rounded"
+                    disabled={isEmployee}
+                  />
+                  <input
+                    type="text"
+                    name="managerQ2"
+                    value={goal?.managerQ2 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Manager Q2"
+                    className="w-full p-2 mb-2 border rounded"
+                    disabled={isEmployee}
+                  />
+                  <input
+                    type="text"
+                    name="managerQ3"
+                    value={goal?.managerQ3 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Manager Q3"
+                    className="w-full p-2 mb-2 border rounded"
+                    disabled={isEmployee}
+                  />
+                  <input
+                    type="text"
+                    name="managerQ4"
+                    value={goal?.managerQ4 || ""}
+                    onChange={(e) => handleInputChange(e, "goals", index)}
+                    placeholder="Manager Q4"
+                    className="w-full p-2 mb-2 border rounded"
+                    disabled={isEmployee}
+                  />
                 </div>
               </div>
-            ))}
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -403,7 +343,7 @@ const UpdatePerformanceReview = () => {
                 <input
                   type="text"
                   name="employeeFeedback"
-                  value={goal?.employeeFeedback}
+                  value={goal?.employeeFeedback || ""}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   placeholder="Employee Feedback"
                   className="w-full p-2 mb-4 border rounded"
@@ -415,7 +355,7 @@ const UpdatePerformanceReview = () => {
                 <input
                   type="text"
                   name="managerFeedback"
-                  value={goal?.managerFeedback}
+                  value={goal?.managerFeedback || ""}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   placeholder="Manager Feedback"
                   className="w-full p-2 mb-4 border rounded"
@@ -428,7 +368,7 @@ const UpdatePerformanceReview = () => {
                 <label className="block mb-2">Self-Rating</label>
                 <select
                   name="selfRating"
-                  value={goal?.selfRating}
+                  value={goal?.selfRating || ""}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   className="w-full p-2 mb-4 border rounded"
                   disabled={isSupervisor}
@@ -455,7 +395,7 @@ const UpdatePerformanceReview = () => {
                 <label className="block mb-2">Manager Rating</label>
                 <select
                   name="managerRating"
-                  value={goal?.managerRating}
+                  value={goal?.managerRating || ""}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   className="w-full p-2 mb-4 border rounded"
                   disabled={isEmployee}
@@ -504,7 +444,7 @@ const UpdatePerformanceReview = () => {
               <input
                 type="text"
                 name="employeeComment"
-                value={review?.employeeComment}
+                value={review?.employeeComment || ""}
                 onChange={handleInputChange}
                 placeholder="Employee Comment"
                 className="w-full p-2 mb-4 border rounded"
@@ -517,7 +457,7 @@ const UpdatePerformanceReview = () => {
                 type="text"
                 name="managerComment"
                 disabled={isEmployee}
-                value={review?.managerComment}
+                value={review?.managerComment || ""}
                 onChange={handleInputChange}
                 placeholder="Manager Comment"
                 className="w-full p-2 mb-4 border rounded"
@@ -543,7 +483,7 @@ const UpdatePerformanceReview = () => {
                 <input
                   type="text"
                   name="self_majorAccomplishments"
-                  value={review?.self_majorAccomplishments}
+                  value={review?.self_majorAccomplishments || ""}
                   onChange={handleInputChange}
                   placeholder="Major Accomplishments"
                   className="w-full p-2 mb-4 border rounded"
@@ -555,7 +495,7 @@ const UpdatePerformanceReview = () => {
                 <input
                   type="text"
                   name="self_areasForImprovement"
-                  value={review?.self_areasForImprovement}
+                  value={review?.self_areasForImprovement || ""}
                   onChange={handleInputChange}
                   placeholder="Areas for Improvement"
                   className="w-full p-2 mb-8 border rounded"
@@ -570,7 +510,7 @@ const UpdatePerformanceReview = () => {
                 <input
                   type="text"
                   name="manag_majorAccomplishments"
-                  value={review?.manag_majorAccomplishments}
+                  value={review?.manag_majorAccomplishments || ""}
                   onChange={handleInputChange}
                   placeholder="Major Accomplishments"
                   disabled={isEmployee}
@@ -582,7 +522,7 @@ const UpdatePerformanceReview = () => {
                 <input
                   type="text"
                   name="manag_areasForImprovement"
-                  value={review?.manag_areasForImprovement}
+                  value={review?.manag_areasForImprovement || ""}
                   onChange={handleInputChange}
                   placeholder="Areas for Improvement"
                   className="w-full p-2 mb-4 border rounded"
@@ -593,7 +533,7 @@ const UpdatePerformanceReview = () => {
             <label className="block mb-2">Overall Rating</label>
             <select
               name="overallRating"
-              value={review?.overallRating}
+              value={review?.overallRating || ""}
               onChange={handleInputChange}
               className="w-full p-2 mb-4 border rounded"
             >
@@ -620,7 +560,7 @@ const UpdatePerformanceReview = () => {
             <input
               type="text"
               name="managerSignature"
-              value={review?.managerSignature}
+              value={review?.managerSignature || ""}
               onChange={handleInputChange}
               placeholder="Manager Signature"
               className="w-full p-2 mb-4 border rounded"
@@ -630,7 +570,11 @@ const UpdatePerformanceReview = () => {
             <input
               type="date"
               name="managerDate"
-              value={review?.managerDate}
+              value={
+                review?.managerDate
+                  ? new Date(review?.managerDate).toISOString().split("T")[0]
+                  : ""
+              }
               onChange={handleInputChange}
               placeholder="Date"
               className="w-full p-2 mb-4 border rounded"
@@ -640,7 +584,7 @@ const UpdatePerformanceReview = () => {
             <input
               type="text"
               name="employeeSignature"
-              value={review?.employeeSignature}
+              value={review?.employeeSignature || ""}
               onChange={handleInputChange}
               placeholder="Employee Signature"
               className="w-full p-2 mb-4 border rounded"
@@ -650,7 +594,11 @@ const UpdatePerformanceReview = () => {
             <input
               type="date"
               name="employeeDate"
-              value={review?.employeeDate}
+              value={
+                review?.employeeDate
+                  ? new Date(review?.employeeDate).toISOString().split("T")[0]
+                  : ""
+              }
               onChange={handleInputChange}
               placeholder="Date"
               className="w-full p-2 mb-4 border rounded"
@@ -660,7 +608,7 @@ const UpdatePerformanceReview = () => {
             <input
               type="text"
               name="employeeComments"
-              value={review?.employeeComments}
+              value={review?.employeeComments || ""}
               onChange={handleInputChange}
               placeholder="Employee Comments"
               className="w-full p-2 mb-4 border rounded"

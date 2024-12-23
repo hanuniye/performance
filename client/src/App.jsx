@@ -48,12 +48,29 @@ function App() {
             >
               <Route path="/" element={<Home />} />
               <Route path="profile" element={<Profile />} />
-              {/* <Route path="performances" element={<NewPerformance />} /> */}
               <Route path="performance_reviews">
                 <Route index element={<PerformanceReviewsList />} />
-                <Route path=":id/details" element={<PerformanceReviewDetails />} />
-                <Route path="new" element={<NewPerformance />} />
-                <Route path=":id/update" element={<UpdatePerformanceReview />} />
+                <Route
+                  path=":id/details"
+                  element={<PerformanceReviewDetails />}
+                />
+                <Route
+                  element={<ProtectedRoutes allowedRoles={["EMPLOYEE"]} />}
+                >
+                  <Route path="new" element={<NewPerformance />} />
+                </Route>
+                <Route
+                  element={
+                    <ProtectedRoutes
+                      allowedRoles={["SUPERVISOR", "EMPLOYEE"]}
+                    />
+                  }
+                >
+                  <Route
+                    path=":id/update"
+                    element={<UpdatePerformanceReview />}
+                  />
+                </Route>
               </Route>
             </Route>
             <Route element={<ProtectedRoutes allowedRoles={["HR"]} />}>

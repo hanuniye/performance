@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
 import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const PerformanceReviewForm = ({}) => {
   const { auth } = useGlobalProvider();
@@ -47,6 +48,7 @@ const PerformanceReviewForm = ({}) => {
     // employeeComments: "",
   });
   const Axios = usePrivateAxios();
+  const navigate = useNavigate()
 
   const [isMidYearCollapsed, setIsMidYearCollapsed] = useState(true);
   const [isYearEndCollapsed, setIsYearEndCollapsed] = useState(true);
@@ -114,7 +116,7 @@ const PerformanceReviewForm = ({}) => {
         },
       });
       toast.success("Performance_review created successfully!");
-      // navigate("/supervisors");
+      navigate("/performance_reviews")
     } catch (error) {
       if (error.response) {
         console.log(error.response);

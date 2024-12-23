@@ -90,6 +90,7 @@ const ListEmployee = () => {
       const { data } = await Axios.delete(`/employee/${id}`);
       if (data?.msg) {
         setEmployees((prev) => prev.filter((item) => item.id !== id));
+        setFilterEmployees((prev) => prev.filter((item) => item.id !== id));
       }
     } catch (error) {
       if (error.response) {
