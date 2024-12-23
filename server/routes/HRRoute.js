@@ -12,7 +12,7 @@ import { Role } from "@prisma/client";
 const router = express.Router();
 
 router.get("/", roles([Role.HR]), getHRs);
-router.post("/", roles([Role.HR]), addHR);
+router.post("/",  addHR);
 router.get("/:id", roles([Role.HR]), getHR);
 router.patch("/:id", roles([Role.HR]), updateHR);
 router.delete("/:id", roles([Role.HR]), deleteHR);
