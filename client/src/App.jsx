@@ -5,7 +5,7 @@ import "./index.css";
 // import ProtectedRoute from "./components/ProtectedRoute";
 // import Login from "./pages/auth/Login";
 // import Singup from "./pages/auth/Singup";
-import HRList from "./pages/HR/HRList";
+import HRList from "./pages/HR/HRList.jsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Layout from "./layout/Layout";
 import NewHR from "./pages/HR/NewHR";
