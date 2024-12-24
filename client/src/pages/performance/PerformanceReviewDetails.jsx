@@ -230,7 +230,6 @@ const PerformanceReviewDetails = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Performance Review Details</h1>
       <div className="bg-white p-8 rounded-lg shadow-md">
         <div ref={componentRef} className="bg-white p-8 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-6 text-center">
@@ -258,7 +257,7 @@ const PerformanceReviewDetails = () => {
 
           <h2 className="text-2xl font-semibold mt-8 mb-6">Goals</h2>
           {review?.goals?.map((goal, index) => (
-            <div key={index} className="mb-6 p-6 border rounded-lg bg-gray-50">
+            <div key={index} className="mb-20 p-6 border rounded-lg bg-gray-50">
               <h3 className="text-xl font-semibold mb-4">Goal {index + 1}</h3>
               <p className="text-lg mb-4">
                 <strong>Global Impact Area:</strong> {goal?.globalImpactArea}
@@ -344,7 +343,7 @@ const PerformanceReviewDetails = () => {
             </p>
           </div>
 
-          <h2 className="text-2xl font-semibold mt-8 mb-6">
+          <h2 className="text-2xl font-semibold mt-10 mb-6">
             Year-End Assessment
           </h2>
           <div className="mb-4">

@@ -28,6 +28,12 @@ export const usePrivateAxios = () => {
         const prevRequest = error?.config;
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           logout();
+
+          //applying refresh token
+          //   prevRequest.sent = true;
+          //   const newAccessToken = await refresh();
+          //   prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          //   return privateAxios(prevRequest);
         }
 
         return Promise.reject(error);
