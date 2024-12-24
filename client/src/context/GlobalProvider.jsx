@@ -14,10 +14,13 @@ export const GlobalProvider = ({ children }) => {
   useEffect(() => {
     // Persist auth data to localStorage whenever it changes
     if (auth) {
+      console.log("auth with data")
       localStorage.setItem("auth", JSON.stringify(auth));
     } else {
       localStorage.removeItem("auth"); // Clear when logged out
+      console.log("auth without data")
     }
+    
   }, [auth]);
 
   return (

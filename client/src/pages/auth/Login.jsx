@@ -1,8 +1,7 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {useLocation, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import { toast, Toaster } from "sonner";
 import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -24,7 +23,7 @@ const schema = yup.object().shape({
 });
 
 const Login = () => {
-  const { setAuth } = useGlobalProvider();
+  const { setAuth, auth } = useGlobalProvider();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +39,6 @@ const Login = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const resp = await axios.post("/auth", JSON.stringify(data), {
         headers: {

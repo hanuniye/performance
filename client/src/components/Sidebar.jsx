@@ -23,10 +23,12 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 import { useGlobalProvider } from "../HOOKS/useGlobalProvider";
+import useLogout from "../HOOKS/useLogout";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { auth } = useGlobalProvider();
+  const logout = useLogout();
 
   return (
     <div className="sidebar flex flex-col py-5 shadow-md w-52 h-[100vh]">
@@ -141,6 +143,35 @@ const Sidebar = () => {
               </div>
             </div>
           )}
+        </div>
+        <div className="flex flex-col justify-between space-y-2 mt-5">
+          <h6 className="title text-sm ml-5 font-medium text-blackLight">
+            User
+          </h6>
+          <div
+            className="flex items-center pl-7 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
+            onClick={() => navigate("/profile")}
+          >
+            <AccountCircleOutlined
+              className="text-orange-500 icon"
+              style={{ fontSize: "18px" }}
+            />
+            <h6 className="text-sm font-medium text-blackLight md:text-md">
+              Profile
+            </h6>
+          </div>
+          <div
+            className="flex items-center pl-7 py-2 space-x-3 hover:bg-likHover hover:cursor-pointer"
+            onClick={() => logout()}
+          >
+            <ExitToApp
+              className="text-orange-500 icon"
+              style={{ fontSize: "18px" }}
+            />
+            <h6 className="text-sm font-medium text-blackLight md:text-md">
+              Logout
+            </h6>
+          </div>
         </div>
       </div>
     </div>

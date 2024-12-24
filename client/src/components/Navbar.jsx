@@ -1,16 +1,8 @@
 import {
-  Search,
   Menu,
-  LanguageOutlined,
-  DarkModeOutlined,
-  FullscreenExitOutlined,
-  NotificationsNoneOutlined,
-  ChatBubbleOutlineOutlined,
-  ListOutlined,
 } from "@mui/icons-material";
 import { useGlobalProvider } from "../HOOKS/useGlobalProvider";
 import { memo, useEffect, useState } from "react";
-import image from "../assets/backg.jpg";
 import useLogout from "../HOOKS/useLogout";
 import { Link } from "react-router-dom";
 
