@@ -24,7 +24,10 @@ app.use(helmet());
 app.use(credentials);
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://performance-review-phi.vercel.app",
+    ],
     credentials: true,
   })
 );
@@ -32,9 +35,9 @@ app.use(cookieParser());
 app.use(express.json());
 
 // routes
-app.get("/" , (req, res) => {
-    return res.send("app is a live")
-})
+app.get("/", (req, res) => {
+  return res.send("app is a live");
+});
 app.use("/api/auth", authRoute);
 app.use(authMiddleWare); //auth middleware
 app.use("/api/employee", employeeRoute);
