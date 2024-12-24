@@ -33,29 +33,30 @@ export const login = async (req, res, next) => {
       { expiresIn: "15s" }
     );
 
-    const refreshToken = jwt.sign(
-      { email: validEmail.email },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
+    // const refreshToken = jwt.sign(
+    //   { email: validEmail.email },
+    //   process.env.REFRESH_TOKEN_SECRET,
+    //   { expiresIn: "1d" }
+    // );
 
     // await prisma.updateById(validEmail.id, {
     //   ...validEmail,
     //   refresh_token: refreshToken,
     // });
 
-    const cookiesOptions = {
-      httpOnly: true, //secure can not access in javascript
-      sameSite: "Strict", //for development env
-      maxAge: 24 * 60 * 60 * 1000, //cookie expirey: set to match the refresh token
-    };
+    // const cookiesOptions = {
+    //   httpOnly: true, //secure can not access in javascript
+    //   sameSite: "Strict", //for development env
+    //   maxAge: 24 * 60 * 60 * 1000, //cookie expirey: set to match the refresh token
+    // };
 
-    if (process.env.DB_ENV === "production") {
-      (cookiesOptions[sameSite] = "None"), (cookiesOptions[secure] = true);
-    }
+    // if (process.env.DB_ENV === "production") {
+    //   (cookiesOptions[sameSite] = "None"), (cookiesOptions[secure] = true);
+    // }
 
-    //create secure cookie with refresh token
-    res.cookie("jwt", refreshToken, cookiesOptions);
+    // //create secure cookie with refresh token
+    // res.cookie("jwt", refreshToken, cookiesOptions);
+
     res.status(StatusCodes.OK).json({
       user: {
         id: validEmail.id,
@@ -70,55 +71,55 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const refresh = (req, res, next) => {
-  const cookies = req.cookies;
+// export const refresh = (req, res, next) => {
+//   const cookies = req.cookies;
 
-  if (!cookies?.jwt)
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json({ error: "Unauthorized!" });
+//   if (!cookies?.jwt)
+//     return res
+//       .status(StatusCodes.UNAUTHORIZED)
+//       .json({ error: "Unauthorized!" });
 
-  const refreshToken = cookies.jwt;
+//   const refreshToken = cookies.jwt;
 
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    async (err, decoded) => {
-      if (err)
-        return res.status(StatusCodes.FORBIDDEN).json({ error: "Forbidden!" });
-      const user = await prisma.users.findFirst({
-        where: { email: decoded.email },
-      });
-      if (!user)
-        return res
-          .status(StatusCodes.UNAUTHORIZED)
-          .json({ error: "Unauthorized!" });
+//   jwt.verify(
+//     refreshToken,
+//     process.env.REFRESH_TOKEN_SECRET,
+//     async (err, decoded) => {
+//       if (err)
+//         return res.status(StatusCodes.FORBIDDEN).json({ error: "Forbidden!" });
+//       const user = await prisma.users.findFirst({
+//         where: { email: decoded.email },
+//       });
+//       if (!user)
+//         return res
+//           .status(StatusCodes.UNAUTHORIZED)
+//           .json({ error: "Unauthorized!" });
 
-      const accessToken = jwt.sign(
-        { email: user.email, role: user.role },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "10s" }
-      );
+//       const accessToken = jwt.sign(
+//         { email: user.email, role: user.role },
+//         process.env.ACCESS_TOKEN_SECRET,
+//         { expiresIn: "10s" }
+//       );
 
-      res.status(StatusCodes.OK).json({ accessToken, role: user.role });
-    }
-  );
-};
-export const logout = (req, res, next) => {
-  const cookies = req.cookies;
+//       res.status(StatusCodes.OK).json({ accessToken, role: user.role });
+//     }
+//   );
+// };
+// export const logout = (req, res, next) => {
+//   const cookies = req.cookies;
 
-  if (!cookies?.jwt) return res.status(StatusCodes.NO_CONTENT);
+//   if (!cookies?.jwt) return res.status(StatusCodes.NO_CONTENT);
 
-  const cookiesOptions = {
-    httpOnly: true, //secure can not access in javascript
-    sameSite: "Strict", //for development env
-    maxAge: 24 * 60 * 60 * 1000, //cookie expirey: set to match the refresh token
-  };
+//   const cookiesOptions = {
+//     httpOnly: true, //secure can not access in javascript
+//     sameSite: "Strict", //for development env
+//     maxAge: 24 * 60 * 60 * 1000, //cookie expirey: set to match the refresh token
+//   };
 
-  if (process.env.DB_ENV === "production") {
-    (cookiesOptions[sameSite] = "None"), (cookiesOptions[secure] = true);
-  }
+//   if (process.env.DB_ENV === "production") {
+//     (cookiesOptions[sameSite] = "None"), (cookiesOptions[secure] = true);
+//   }
 
-  res.clearCookie("jwt", cookiesOptions);
-  res.status(StatusCodes.OK).json({ msg: "Logged out successfully" });
-};
+//   res.clearCookie("jwt", cookiesOptions);
+//   res.status(StatusCodes.OK).json({ msg: "Logged out successfully" });
+// };

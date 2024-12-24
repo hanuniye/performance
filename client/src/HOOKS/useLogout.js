@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import axios from "../api/axios";
+// import axios from "../api/axios";
 import { useGlobalProvider } from "./useGlobalProvider";
 
 const useLogout = () => {
@@ -7,16 +7,13 @@ const useLogout = () => {
 
   const logout = async () => {
     try {
-      setAuth(null); // Clear global state
-      localStorage.removeItem("auth"); // Clear localStorage
-      // console.log("begins");
-      // const logout = await axios.post(
+      // await axios.post(
       //   "/auth/logout",
       //   {},
       //   { withCredentials: true }
       // );
-      // console.log(logout);
-     
+      setAuth(null); // Clear global state
+      localStorage.removeItem("auth"); // Clear localStorage
     } catch (error) {
       if (error.response) {
         console.log(error.response);
