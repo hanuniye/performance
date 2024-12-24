@@ -2,27 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.right .alert{
-    position: absolute;
-    top: -2px;
-    right: -4px;
+.right .alert {
+  position: absolute;
+  top: -2px;
+  right: -4px;
 }
 
-.APPROVED{
-    background-color: rgba(0, 128, 0, 0.2);
-    color: green;
+.APPROVED {
+  background-color: rgba(0, 128, 0, 0.2);
+  color: green;
 }
-.IN_REVIEW{
-    background-color: rgba(255, 248, 36, 0.2);
-    color: goldenrod;
+.IN_REVIEW {
+  background-color: rgba(255, 248, 36, 0.2);
+  color: goldenrod;
 }
-.SUBMITTED{
-    background-color: rgba(225, 0, 0, 0.1);
-    color: crimson;
+.SUBMITTED {
+  background-color: rgba(225, 0, 0, 0.1);
+  color: crimson;
+}
+
+@page {
+  margin: 50px; 
+  /* Add margins to the printed page */
+}
+
+body {
+  margin: 0; /* Remove default body margin */
+}
+
+.print-container {
+  padding: 20px; 
+  /* Add padding inside the content */
+}
+
+.print-container > * {
+  /* page-break-inside: avoid;  */
+  /* Prevent breaking inside child elements */
+  /* break-inside: avoid; */
 }

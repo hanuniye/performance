@@ -114,7 +114,6 @@ export const getPerformanceReviews = async (req, res) => {
       },
     });
 
-    console.log(performanceReviews);
 
     return res.status(200).json({ msg: performanceReviews });
   } catch (error) {

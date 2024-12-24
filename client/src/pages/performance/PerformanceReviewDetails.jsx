@@ -8,6 +8,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
+import "../../index.css"
 
 const PerformanceReviewDetails = () => {
   const { id } = useParams();
@@ -85,7 +86,7 @@ const PerformanceReviewDetails = () => {
   return (
     <div className="container mx-auto p-6">
       <div className="bg-white p-8 rounded-lg shadow-md">
-        <div ref={componentRef} className="bg-white p-8 rounded-lg shadow-md">
+        <div ref={componentRef} className="bg-white p-8 rounded-lg shadow-md print-container">
           <h2 className="text-2xl font-semibold mb-6 text-center">
             Performance Review Details
           </h2>
@@ -119,14 +120,14 @@ const PerformanceReviewDetails = () => {
               <p className="text-lg mb-4">
                 <strong>Core Competency:</strong> {goal?.coreCompetency}
               </p>
-              <p className="text-lg mb-4">
+              <p className="text-lg mb-4 whitespace-pre-wrap break-words">
                 <strong>Functional Competency:</strong>{" "}
                 {goal?.functionalCompetency}
               </p>
-              <p className="text-lg mb-4">
+              <p className="text-lg mb-4 whitespace-pre-wrap break-words">
                 <strong>Key Tasks:</strong> {goal?.keyTasks}
               </p>
-              <p className="text-lg mb-4">
+              <p className="text-lg mb-4 whitespace-pre-wrap break-words">
                 <strong>Why Important:</strong> {goal?.whyImportant}
               </p>
               <p className="text-l mb-4">

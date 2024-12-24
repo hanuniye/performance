@@ -48,7 +48,7 @@ const PerformanceReviewForm = ({}) => {
     // employeeComments: "",
   });
   const Axios = usePrivateAxios();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [isMidYearCollapsed, setIsMidYearCollapsed] = useState(true);
   const [isYearEndCollapsed, setIsYearEndCollapsed] = useState(true);
@@ -116,7 +116,7 @@ const PerformanceReviewForm = ({}) => {
         },
       });
       toast.success("Performance_review created successfully!");
-      navigate("/performance_reviews")
+      navigate("/performance_reviews");
     } catch (error) {
       if (error.response) {
         console.log(error.response);
@@ -234,34 +234,51 @@ const PerformanceReviewForm = ({}) => {
               <option value="Delivering Results">Delivering Results</option>
             </select>
             <label className="block mb-2">Functional Competency</label>
-            <input
-              type="text"
+            <textarea
               name="functionalCompetency"
               value={goal.functionalCompetency}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Functional Competency"
-              className="w-full p-2 mb-4 border rounded"
+              className="w-full p-2 mb-4 border rounded resize-none"
+              rows="1"
+              style={{ minHeight: "100px" }}
               required
+              onInput={(e) => {
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
             />
-            <label className="block mb-2">Key Tasks</label>
-            <input
-              type="text"
+            <label className="block mb-2">
+              List Key Tasks To Accomplish The Goal
+            </label>
+            <textarea
               name="keyTasks"
               value={goal.keyTasks}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Key Tasks"
-              className="w-full p-2 mb-4 border rounded"
+              className="w-full p-2 mb-4 border rounded resize-none"
+              rows="1"
+              style={{ minHeight: "100px" }}
               required
+              onInput={(e) => {
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
             />
             <label className="block mb-2">Why is this important?</label>
-            <input
-              type="text"
+            <textarea
               name="whyImportant"
               value={goal.whyImportant}
               onChange={(e) => handleInputChange(e, "goals", index)}
               placeholder="Why is this important?"
-              className="w-full p-2 mb-4 border rounded"
+              className="w-full p-2 mb-4 border rounded resize-none"
+              rows="1"
+              style={{ minHeight: "100px" }}
               required
+              onInput={(e) => {
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
             />
             <label className="block mb-2">When will you accomplish it?</label>
             <input
@@ -281,9 +298,10 @@ const PerformanceReviewForm = ({}) => {
                 <h4 className="text-lg font-medium mb-2">Quarterly Updates</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h5 className="font-semibold mb-2">Employee Updates</h5>
-                    <input
-                      type="text"
+                    <h5 className="font-semibold mb-2">
+                      Employee Updates(Optional)
+                    </h5>
+                    <textarea
                       name="q1"
                       value={update.employeeUpdates.q1}
                       onChange={(e) =>
@@ -296,11 +314,16 @@ const PerformanceReviewForm = ({}) => {
                         )
                       }
                       placeholder="Employee Q1"
-                      className="w-full p-2 mb-2 border rounded"
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
                       required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
-                    <input
-                      type="text"
+                    <textarea
                       name="q2"
                       value={update.employeeUpdates.q2}
                       onChange={(e) =>
@@ -313,11 +336,16 @@ const PerformanceReviewForm = ({}) => {
                         )
                       }
                       placeholder="Employee Q2"
-                      className="w-full p-2 mb-2 border rounded"
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
                       required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
-                    <input
-                      type="text"
+                    <textarea
                       name="q3"
                       value={update.employeeUpdates.q3}
                       onChange={(e) =>
@@ -330,11 +358,16 @@ const PerformanceReviewForm = ({}) => {
                         )
                       }
                       placeholder="Employee Q3"
-                      className="w-full p-2 mb-2 border rounded"
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
                       required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
-                    <input
-                      type="text"
+                    <textarea
                       name="q4"
                       value={update.employeeUpdates.q4}
                       onChange={(e) =>
@@ -347,14 +380,21 @@ const PerformanceReviewForm = ({}) => {
                         )
                       }
                       placeholder="Employee Q4"
-                      className="w-full p-2 mb-2 border rounded"
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
                       required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
                   </div>
                   <div>
-                    <h5 className="font-semibold mb-2">Manager Updates</h5>
-                    <input
-                      type="text"
+                    <h5 className="font-semibold mb-2">
+                      Manager Updates(Optional)
+                    </h5>
+                    <textarea
                       name="q1"
                       // value={update.managerUpdates.q1}
                       onChange={(e) =>
@@ -366,12 +406,18 @@ const PerformanceReviewForm = ({}) => {
                           "managerUpdates"
                         )
                       }
-                      placeholder="Manager Q1"
-                      className="w-full p-2 mb-2 border rounded"
+                      placeholder="Employee Q1"
                       disabled
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
+                      required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
-                    <input
-                      type="text"
+                    <textarea
                       name="q2"
                       // value={update.managerUpdates.q2}
                       onChange={(e) =>
@@ -383,12 +429,18 @@ const PerformanceReviewForm = ({}) => {
                           "managerUpdates"
                         )
                       }
-                      placeholder="Manager Q2"
-                      className="w-full p-2 mb-2 border rounded"
+                      placeholder="Employee Q2"
                       disabled
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
+                      required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
-                    <input
-                      type="text"
+                    <textarea
                       name="q3"
                       // value={update.managerUpdates.q3}
                       onChange={(e) =>
@@ -400,12 +452,18 @@ const PerformanceReviewForm = ({}) => {
                           "managerUpdates"
                         )
                       }
-                      placeholder="Manager Q3"
-                      className="w-full p-2 mb-2 border rounded"
+                      placeholder="Employee Q3"
                       disabled
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
+                      required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
-                    <input
-                      type="text"
+                    <textarea
                       name="q4"
                       // value={update.managerUpdates.q4}
                       onChange={(e) =>
@@ -417,9 +475,16 @@ const PerformanceReviewForm = ({}) => {
                           "managerUpdates"
                         )
                       }
-                      placeholder="Manager Q4"
-                      className="w-full p-2 mb-2 border rounded"
+                      placeholder="Employee Q4"
                       disabled
+                      className="w-full p-2 mb-4 border rounded resize-none"
+                      rows="1"
+                      style={{ minHeight: "50px" }}
+                      required
+                      onInput={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                      }}
                     />
                   </div>
                 </div>
@@ -429,25 +494,37 @@ const PerformanceReviewForm = ({}) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block mb-2">Employee Feedback</label>
-                <input
-                  type="text"
+                <textarea
                   name="employeeFeedback"
                   value={goal.employeeFeedback}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   placeholder="Employee Feedback"
-                  className="w-full p-2 mb-4 border rounded"
+                  className="w-full p-2 mb-4 border rounded resize-none"
+                  rows="1"
+                  style={{ minHeight: "100px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
                 />
               </div>
               <div>
                 <label className="block mb-2">Manager Feedback</label>
-                <input
-                  type="text"
+                <textarea
                   name="managerFeedback"
                   // value={goal.managerFeedback}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   placeholder="Manager Feedback"
-                  className="w-full p-2 mb-4 border rounded"
                   disabled
+                  className="w-full p-2 mb-4 border rounded resize-none"
+                  rows="1"
+                  style={{ minHeight: "100px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
                 />
               </div>
             </div>
@@ -528,26 +605,38 @@ const PerformanceReviewForm = ({}) => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block mb-2">Employee Comment</label>
-              <input
-                type="text"
+              <textarea
                 name="employeeComment"
                 disabled
                 // value={formData.employeeComment}
                 onChange={handleInputChange}
                 placeholder="Employee Comment"
-                className="w-full p-2 mb-4 border rounded"
+                className="w-full p-2 mb-4 border rounded resize-none"
+                rows="1"
+                style={{ minHeight: "100px" }}
+                required
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
               />
             </div>
             <div>
               <label className="block mb-2">Manager Comment</label>
-              <input
-                type="text"
+              <textarea
                 name="managerComment"
                 disabled
                 // value={formData.managerComment}
                 onChange={handleInputChange}
                 placeholder="Manager Comment"
-                className="w-full p-2 mb-4 border rounded"
+                className="w-full p-2 mb-4 border rounded resize-none"
+                rows="1"
+                style={{ minHeight: "100px" }}
+                required
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
               />
             </div>
           </div>
@@ -567,26 +656,38 @@ const PerformanceReviewForm = ({}) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block mb-2">Major Accomplishments</label>
-                <input
-                  type="text"
+                <textarea
                   name="majorAccomplishments"
                   // value={formData.majorAccomplishments}
                   onChange={handleInputChange}
                   placeholder="Major Accomplishments"
-                  className="w-full p-2 mb-4 border rounded"
+                  className="w-full p-2 mb-4 border rounded resize-none"
                   disabled
+                  rows="1"
+                  style={{ minHeight: "100px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
                 />
               </div>
               <div>
                 <label className="block mb-2">Areas for Improvement</label>
-                <input
-                  type="text"
+                <textarea
                   name="areasForImprovement"
                   // value={formData.areasForImprovement}
                   onChange={handleInputChange}
                   placeholder="Areas for Improvement"
-                  className="w-full p-2 mb-8 border rounded"
+                  className="w-full p-2 mb-4 border rounded resize-none"
                   disabled
+                  rows="1"
+                  style={{ minHeight: "100px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
                 />
               </div>
             </div>
@@ -594,26 +695,38 @@ const PerformanceReviewForm = ({}) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block mb-2">Major Accomplishments</label>
-                <input
-                  type="text"
+                <textarea
                   name="majorAccomplishments"
                   // value={formData.majorAccomplishments}
                   onChange={handleInputChange}
                   placeholder="Major Accomplishments"
                   disabled
-                  className="w-full p-2 mb-4 border rounded"
+                  className="w-full p-2 mb-4 border rounded resize-none"
+                  rows="1"
+                  style={{ minHeight: "100px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
                 />
               </div>
               <div>
                 <label className="block mb-2">Areas for Improvement</label>
-                <input
-                  type="text"
+                <textarea
                   name="areasForImprovement"
                   // value={formData.areasForImprovement}
                   onChange={handleInputChange}
                   placeholder="Areas for Improvement"
-                  className="w-full p-2 mb-4 border rounded"
                   disabled
+                  className="w-full p-2 mb-4 border rounded resize-none"
+                  rows="1"
+                  style={{ minHeight: "100px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
                 />
               </div>
             </div>
@@ -685,14 +798,20 @@ const PerformanceReviewForm = ({}) => {
               disabled
             />
             <label className="block mb-2">Employee Comments</label>
-            <input
-              type="text"
+            <textarea
               name="employeeComments"
               // value={formData.employeeComments}
               onChange={handleInputChange}
               placeholder="Employee Comments"
-              className="w-full p-2 mb-4 border rounded"
+              className="w-full p-2 mb-4 border rounded resize-none"
               disabled
+              rows="1"
+              style={{ minHeight: "100px" }}
+              required
+              onInput={(e) => {
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
             />
           </>
         )}

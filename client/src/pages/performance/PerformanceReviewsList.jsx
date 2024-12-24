@@ -57,7 +57,7 @@ const PerformanceReviewsList = () => {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      setIsLoading(false);
+      setIsLoading(true);
       try {
         const response = await Axios.get("/performance_review");
         setPerformanceReviews(response.data?.msg);
