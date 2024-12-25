@@ -38,6 +38,7 @@ model PerformanceReview {
   manager                    String
   location                   String
   fy                         String
+  department                 String
   employeeComment            String?
   managerComment             String?
   self_majorAccomplishments  String?
@@ -65,7 +66,7 @@ model Goal {
   functionalCompetency String
   keyTasks             String
   whyImportant         String
-  whenAccomplish       DateTime
+  whenAccomplish       String
   employeeQ1           String?
   employeeQ2           String?
   employeeQ3           String?

@@ -4,7 +4,8 @@ import { PrismaClient, Role, Status } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const addPerformanceReview = async (req, res) => {
-  const { employeeId, location, name, title, manager, fy, goals } = req.body;
+  const { employeeId, location, name, title, manager, fy, goals, department } =
+    req.body;
 
   if (
     !employeeId ||
@@ -14,6 +15,7 @@ export const addPerformanceReview = async (req, res) => {
     !manager ||
     !fy ||
     !goals ||
+    !department ||
     !goals.length
   ) {
     return res
@@ -31,6 +33,7 @@ export const addPerformanceReview = async (req, res) => {
           name,
           title,
           manager,
+          department,
         },
       });
 
@@ -43,7 +46,7 @@ export const addPerformanceReview = async (req, res) => {
             functionalCompetency: goal.functionalCompetency,
             keyTasks: goal.keyTasks,
             whyImportant: goal.whyImportant,
-            whenAccomplish: new Date(goal.whenAccomplish),
+            whenAccomplish: goal.whenAccomplish,
             employeeQ1: goal.quarterlyUpdates[0].employeeUpdates.q1,
             employeeQ2: goal.quarterlyUpdates[0].employeeUpdates.q2,
             employeeQ3: goal.quarterlyUpdates[0].employeeUpdates.q3,
@@ -60,6 +63,8 @@ export const addPerformanceReview = async (req, res) => {
 
       return performanceReview;
     });
+
+    if (!result) return result;
 
     return res.status(StatusCodes.OK).json({ msg: result });
   } catch (error) {
@@ -113,7 +118,6 @@ export const getPerformanceReviews = async (req, res) => {
         createdAt: "desc",
       },
     });
-
 
     return res.status(200).json({ msg: performanceReviews });
   } catch (error) {

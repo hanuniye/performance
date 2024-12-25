@@ -21,7 +21,7 @@ const verifyJWT = (req, res, next) => {
     });
     if (!user)
       return res
-        .status(StatusCodes.UNAUTHORIZED)
+        .status(StatusCodes.FORBIDDEN)
         .json({ error: "Unauthorized!" });
 
     req.userId = user?.id;

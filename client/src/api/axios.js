@@ -2,6 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "https://performance-71pc.onrender.com/api";
 // http://localhost:5000
+// https://performance-71pc.onrender.com
+
 export default axios.create({
   baseURL: BASE_URL,
 });

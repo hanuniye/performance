@@ -12,6 +12,7 @@ const PerformanceReviewForm = ({}) => {
     title: "",
     manager: "",
     location: "",
+    department: "",
     fy: "",
     goals: [
       {
@@ -119,7 +120,7 @@ const PerformanceReviewForm = ({}) => {
       navigate("/performance_reviews");
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
+        // console.log(error.response.data.error);
         toast.error(error.response.data.error);
       } else {
         console.log(error.message);
@@ -312,7 +313,7 @@ const PerformanceReviewForm = ({}) => {
             </div>
 
             <div className="flex items-start border-[2px] border-black mb-4">
-              <div className="w-1/3 py-1">
+              <div className="w-1/3 py-1 border-r-[2px] border-blackLight">
                 <label className="block border-b-[2px] border-black px-1 text-xs font-bold">
                   List Key Tasks To Accomplish The Goal
                 </label>
@@ -330,7 +331,7 @@ const PerformanceReviewForm = ({}) => {
                   }}
                 />
               </div>
-              <div className="w-1/3 py-1 border-x-[2px] border-black">
+              <div className="w-1/3 py-1 border-x-[2px] border-blackLight">
                 <label className="block border-b-[2px] capitalize border-black px-1 text-xs font-bold">
                   Why is this important to you and your team?
                 </label>
@@ -348,7 +349,7 @@ const PerformanceReviewForm = ({}) => {
                   }}
                 />
               </div>
-              <div className="w-1/3 py-1 ">
+              <div className="w-1/3 py-1 border-l-[2px] border-blackLight">
                 <label className="block border-b-[2px] capitalize border-black px-1 text-xs font-bold">
                   When will you accomplish it?
                 </label>
@@ -371,10 +372,10 @@ const PerformanceReviewForm = ({}) => {
             {goal.quarterlyUpdates.map((update, subIndex) => (
               <div
                 key={subIndex}
-                className="grid grid-cols-2 gap-4 border-[2px] border-black mb-4"
+                className="flex items-start border-[2px] border-black mb-4"
               >
                 <div className="border-r-[2px] border-black">
-                  <h5 className="font-bold mb-2 p-2 bg-gray-400 border-b-[2px] border-black">
+                  <h5 className="font-bold p-2 bg-gray-400 border-b-[2px] border-black">
                     Employee Updates(Optional)
                   </h5>
                   <textarea
@@ -390,7 +391,7 @@ const PerformanceReviewForm = ({}) => {
                       )
                     }
                     placeholder="Employee Q1"
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border-b-[2px] border-black resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -412,7 +413,7 @@ const PerformanceReviewForm = ({}) => {
                       )
                     }
                     placeholder="Employee Q2"
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border-b-[2px] border-black resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -434,7 +435,7 @@ const PerformanceReviewForm = ({}) => {
                       )
                     }
                     placeholder="Employee Q3"
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border-b-[2px] border-black resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -456,7 +457,7 @@ const PerformanceReviewForm = ({}) => {
                       )
                     }
                     placeholder="Employee Q4"
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -467,7 +468,7 @@ const PerformanceReviewForm = ({}) => {
                   />
                 </div>
                 <div>
-                  <h5 className="font-semibold mb-2 ">
+                  <h5 className="font-bold p-2 bg-gray-400 border-b-[2px] border-black">
                     Manager Updates(Optional)
                   </h5>
                   <textarea
@@ -482,9 +483,9 @@ const PerformanceReviewForm = ({}) => {
                         "managerUpdates"
                       )
                     }
-                    placeholder="Employee Q1"
+                    placeholder="Manager Q1"
                     disabled
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border-b-[2px] border-black resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -505,9 +506,9 @@ const PerformanceReviewForm = ({}) => {
                         "managerUpdates"
                       )
                     }
-                    placeholder="Employee Q2"
+                    placeholder="Manager Q2"
                     disabled
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border-b-[2px] border-black resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -528,9 +529,9 @@ const PerformanceReviewForm = ({}) => {
                         "managerUpdates"
                       )
                     }
-                    placeholder="Employee Q3"
+                    placeholder="Manager Q3"
                     disabled
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border-b-[2px] border-black resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -551,9 +552,9 @@ const PerformanceReviewForm = ({}) => {
                         "managerUpdates"
                       )
                     }
-                    placeholder="Employee Q4"
+                    placeholder="Manager Q4"
                     disabled
-                    className="w-full p-2 mb-4 border rounded resize-none"
+                    className="w-full p-2 border rounded resize-none outline-none"
                     rows="1"
                     style={{ minHeight: "50px" }}
                     required
@@ -565,18 +566,22 @@ const PerformanceReviewForm = ({}) => {
                 </div>
               </div>
             ))}
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-2">Employee Feedback</label>
+            <p className="font-medium text-[17px] mb-1 mt-8">
+              Use this section to provide feedback and rating for the outcome of
+              the goal.
+            </p>
+            <div className="flex items-start border-[2px] border-black mb-1">
+              <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Manager Feedback
+                </label>
                 <textarea
                   name="employeeFeedback"
                   value={goal.employeeFeedback}
                   onChange={(e) => handleInputChange(e, "goals", index)}
-                  placeholder="Employee Feedback"
-                  className="w-full p-2 mb-4 border rounded resize-none"
+                  className="w-full resize-none pt-1 outline-none px-1"
                   rows="1"
-                  style={{ minHeight: "100px" }}
+                  style={{ minHeight: "150px" }}
                   required
                   onInput={(e) => {
                     e.target.style.height = "auto";
@@ -584,17 +589,18 @@ const PerformanceReviewForm = ({}) => {
                   }}
                 />
               </div>
-              <div>
-                <label className="block mb-2">Manager Feedback</label>
+              <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Manager Feedback
+                </label>
                 <textarea
                   name="managerFeedback"
                   // value={goal.managerFeedback}
                   onChange={(e) => handleInputChange(e, "goals", index)}
-                  placeholder="Manager Feedback"
                   disabled
-                  className="w-full p-2 mb-4 border rounded resize-none"
+                  className="w-full resize-none pt-1 outline-none px-1"
                   rows="1"
-                  style={{ minHeight: "100px" }}
+                  style={{ minHeight: "150px" }}
                   required
                   onInput={(e) => {
                     e.target.style.height = "auto";
@@ -603,40 +609,38 @@ const PerformanceReviewForm = ({}) => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-2 gap-[2px]">
+              <select
+                name="selfRating"
+                value={goal.selfRating}
+                onChange={(e) => handleInputChange(e, "goals", index)}
+                className="w-full p-2 py-3 mb-4 border-[2px] border-black rounded"
+              >
+                <option value="">Select Self-Rating</option>
+                <option value="Significantly Exceeds Requirements (SER)">
+                  Significantly Exceeds Requirements (SER)
+                </option>
+                <option value="Exceeds Requirements (ER)">
+                  Exceeds Requirements (ER)
+                </option>
+                <option value="Meets All Requirements (MA)">
+                  Meets All Requirements (MA)
+                </option>
+                <option value="Meets Most Requirements (M)">
+                  Meets Most Requirements (M)
+                </option>
+                <option value="Below Requirements (BR)">
+                  Below Requirements (BR)
+                </option>
+              </select>
+
               <div>
-                <label className="block mb-2">Self-Rating</label>
-                <select
-                  name="selfRating"
-                  value={goal.selfRating}
-                  onChange={(e) => handleInputChange(e, "goals", index)}
-                  className="w-full p-2 mb-4 border rounded"
-                >
-                  <option value="">Select Self-Rating</option>
-                  <option value="Significantly Exceeds Requirements (SER)">
-                    Significantly Exceeds Requirements (SER)
-                  </option>
-                  <option value="Exceeds Requirements (ER)">
-                    Exceeds Requirements (ER)
-                  </option>
-                  <option value="Meets All Requirements (MA)">
-                    Meets All Requirements (MA)
-                  </option>
-                  <option value="Meets Most Requirements (M)">
-                    Meets Most Requirements (M)
-                  </option>
-                  <option value="Below Requirements (BR)">
-                    Below Requirements (BR)
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label className="block mb-2">Manager Rating</label>
                 <select
                   name="managerRating"
                   // value={goal.managerRating}
                   onChange={(e) => handleInputChange(e, "goals", index)}
-                  className="w-full p-2 mb-4 border rounded"
+                  className="w-full p-2 py-3  mb-4 border-[2px] border-black rounded"
                   disabled
                 >
                   <option value="">Select Manager Rating</option>
@@ -671,24 +675,25 @@ const PerformanceReviewForm = ({}) => {
 
       <div className="mb-10  mx-6">
         <h2
-          className="text-2xl font-bold mb-4 cursor-pointer"
+          className="text-xl font-bold mb-4 cursor-pointer text-red-600"
           onClick={() => setIsMidYearCollapsed(!isMidYearCollapsed)}
         >
           Mid-Year Review {isMidYearCollapsed ? "+" : "-"}
         </h2>
         {!isMidYearCollapsed && (
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-2">Employee Comment</label>
+          <div className="flex items-start border-[2px] border-black mb-4">
+            <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
+              <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                Employee Comment
+              </label>
               <textarea
                 name="employeeComment"
                 disabled
                 // value={formData.employeeComment}
                 onChange={handleInputChange}
-                placeholder="Employee Comment"
-                className="w-full p-2 mb-4 border rounded resize-none"
+                className="w-full resize-none pt-1 outline-none px-1"
                 rows="1"
-                style={{ minHeight: "100px" }}
+                style={{ minHeight: "200px" }}
                 required
                 onInput={(e) => {
                   e.target.style.height = "auto";
@@ -696,17 +701,18 @@ const PerformanceReviewForm = ({}) => {
                 }}
               />
             </div>
-            <div>
-              <label className="block mb-2">Manager Comment</label>
+            <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
+              <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                Manager Comment
+              </label>
               <textarea
                 name="managerComment"
                 disabled
                 // value={formData.managerComment}
                 onChange={handleInputChange}
-                placeholder="Manager Comment"
-                className="w-full p-2 mb-4 border rounded resize-none"
+                className="w-full resize-none pt-1 outline-none px-1"
                 rows="1"
-                style={{ minHeight: "100px" }}
+                style={{ minHeight: "200px" }}
                 required
                 onInput={(e) => {
                   e.target.style.height = "auto";
@@ -720,26 +726,33 @@ const PerformanceReviewForm = ({}) => {
 
       <div className="mb-6  mx-6">
         <h2
-          className="text-2xl font-bold mb-4 cursor-pointer"
+          className="text-xl font-bold mb-1 cursor-pointer text-red-600"
           onClick={() => setIsYearEndCollapsed(!isYearEndCollapsed)}
         >
           Year-End Assessment {isYearEndCollapsed ? "+" : "-"}
         </h2>
+
         {!isYearEndCollapsed && (
           <>
-            <h2 className="text-xl font-bold mb-4">Self-Assessment</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-2">Major Accomplishments</label>
+            <label className="block text-sm font-bold mb-6">
+              Looking back at this fiscal year, capture the highlights here.
+            </label>
+            <h2 className="text-xl font-bold mb-4  text-red-600">
+              Self-Assessment
+            </h2>
+            <div className="flex items-start border-[2px] border-black mb-4">
+              <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Strengths/Major Accomplishments
+                </label>
                 <textarea
                   name="majorAccomplishments"
                   // value={formData.majorAccomplishments}
                   onChange={handleInputChange}
-                  placeholder="Major Accomplishments"
-                  className="w-full p-2 mb-4 border rounded resize-none"
-                  disabled
+                  className="w-full resize-none pt-1 outline-none px-1"
                   rows="1"
-                  style={{ minHeight: "100px" }}
+                  disabled
+                  style={{ minHeight: "200px" }}
                   required
                   onInput={(e) => {
                     e.target.style.height = "auto";
@@ -747,18 +760,19 @@ const PerformanceReviewForm = ({}) => {
                   }}
                 />
               </div>
-              <div>
-                <label className="block mb-2">Areas for Improvement</label>
+              <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Areas for Improvement
+                </label>
                 <textarea
                   name="areasForImprovement"
                   // value={formData.areasForImprovement}
                   onChange={handleInputChange}
-                  placeholder="Areas for Improvement"
-                  className="w-full p-2 mb-4 border rounded resize-none"
-                  disabled
+                  className="w-full resize-none pt-1 outline-none px-1"
                   rows="1"
-                  style={{ minHeight: "100px" }}
+                  style={{ minHeight: "200px" }}
                   required
+                  disabled
                   onInput={(e) => {
                     e.target.style.height = "auto";
                     e.target.style.height = `${e.target.scrollHeight}px`;
@@ -766,118 +780,145 @@ const PerformanceReviewForm = ({}) => {
                 />
               </div>
             </div>
-            <h2 className="text-xl font-bold mb-4">Manager Assessment</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-2">Major Accomplishments</label>
-                <textarea
-                  name="majorAccomplishments"
-                  // value={formData.majorAccomplishments}
-                  onChange={handleInputChange}
-                  placeholder="Major Accomplishments"
-                  disabled
-                  className="w-full p-2 mb-4 border rounded resize-none"
-                  rows="1"
-                  style={{ minHeight: "100px" }}
-                  required
-                  onInput={(e) => {
-                    e.target.style.height = "auto";
-                    e.target.style.height = `${e.target.scrollHeight}px`;
-                  }}
-                />
-              </div>
-              <div>
-                <label className="block mb-2">Areas for Improvement</label>
-                <textarea
-                  name="areasForImprovement"
-                  // value={formData.areasForImprovement}
-                  onChange={handleInputChange}
-                  placeholder="Areas for Improvement"
-                  disabled
-                  className="w-full p-2 mb-4 border rounded resize-none"
-                  rows="1"
-                  style={{ minHeight: "100px" }}
-                  required
-                  onInput={(e) => {
-                    e.target.style.height = "auto";
-                    e.target.style.height = `${e.target.scrollHeight}px`;
-                  }}
-                />
-              </div>
-            </div>
-            <label className="block mb-2">Overall Rating</label>
-            <select
-              name="overallRating"
-              // value={formData.overallRating}
-              onChange={handleInputChange}
-              className="w-full p-2 mb-4 border rounded"
-              disabled
-            >
-              <option value="">Select Overall Rating</option>
-              <option value="Significantly Exceeds Requirements (SER)">
-                Significantly Exceeds Requirements (SER)
-              </option>
-              <option value="Exceeds Requirements (ER)">
-                Exceeds Requirements (ER)
-              </option>
-              <option value="Meets All Requirements (MA)">
-                Meets All Requirements (MA)
-              </option>
-              <option value="Meets Most Requirements (M)">
-                Meets Most Requirements (M)
-              </option>
-              <option value="Below Requirements (BR)">
-                Below Requirements (BR)
-              </option>
-            </select>
 
-            <h2 className="text-xl font-bold mb-4">Sign Off</h2>
-            <label className="block mb-2">Manager Signature</label>
-            <input
-              type="text"
-              name="managerSignature"
-              // value={formData.managerSignature}
-              onChange={handleInputChange}
-              placeholder="Manager Signature"
-              className="w-full p-2 mb-4 border rounded"
-              disabled
-            />
-            <label className="block mb-2">Date</label>
-            <input
-              type="date"
-              name="date"
-              // value={formData.date}
-              onChange={handleInputChange}
-              placeholder="Date"
-              className="w-full p-2 mb-4 border rounded"
-              disabled
-            />
-            <label className="block mb-2">Employee Signature</label>
-            <input
-              type="text"
-              name="employeeSignature"
-              // value={formData.employeeSignature}
-              onChange={handleInputChange}
-              placeholder="Employee Signature"
-              className="w-full p-2 mb-4 border rounded"
-              disabled
-            />
-            <label className="block mb-2">Date</label>
-            <input
-              type="date"
-              name="date"
-              // value={formData.date}
-              onChange={handleInputChange}
-              placeholder="Date"
-              className="w-full p-2 mb-4 border rounded"
-              disabled
-            />
-            <label className="block mb-2">Employee Comments</label>
+            <h2 className="text-xl font-bold mb-4 text-red-600">
+              Manager Assessment
+            </h2>
+            <div className="flex items-start border-[2px] border-black mb-4">
+              <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Strengths/Major Accomplishments
+                </label>
+                <textarea
+                  name="majorAccomplishments"
+                  // value={formData.majorAccomplishments}
+                  onChange={handleInputChange}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  disabled
+                  style={{ minHeight: "200px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+              <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Areas for Improvement
+                </label>
+                <textarea
+                  name="areasForImprovement"
+                  // value={formData.areasForImprovement}
+                  onChange={handleInputChange}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  style={{ minHeight: "200px" }}
+                  required
+                  disabled
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base w-[140px]">Overall Rating:</strong>
+              <select
+                name="overallRating"
+                // value={formData.overallRating}
+                disabled
+                onChange={handleInputChange}
+                className="p-2 mb-1 border rounded w-full"
+                required
+              >
+                <option value="">Select Overall Rating</option>
+                <option value="Significantly Exceeds Requirements (SER)">
+                  Significantly Exceeds Requirements (SER)
+                </option>
+                <option value="Exceeds Requirements (ER)">
+                  Exceeds Requirements (ER)
+                </option>
+                <option value="Meets All Requirements (MA)">
+                  Meets All Requirements (MA)
+                </option>
+                <option value="Meets Most Requirements (M)">
+                  Meets Most Requirements (M)
+                </option>
+                <option value="Below Requirements (BR)">
+                  Below Requirements (BR)
+                </option>
+              </select>
+            </div>
+
+            <h2 className="text-xl font-bold mb-4 text-red-600">Sign Off</h2>
+            <div className="flex items-start gap-5 mb-4">
+              <div className="left w-1/2">
+                <div className="flex items-center gap-2 mb-1">
+                  <strong className="text-base">Manager:</strong>
+                  <input
+                    type="text"
+                    name="managerSignature"
+                    // value={formData.managerSignature}
+                    onChange={handleInputChange}
+                    placeholder="Manager Signature"
+                    className="p-1  border ml-[6px] rounded w-full "
+                    required
+                    disabled
+                  />
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <strong className="text-base">Employee:</strong>
+                  <input
+                    type="text"
+                    name="employeeSignature"
+                    // value={formData.employeeSignature}
+                    onChange={handleInputChange}
+                    placeholder="Employee Signature"
+                    className="p-1  border rounded w-full"
+                    required
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className="right w-1/2">
+                <div className="flex items-center gap-2 mb-1">
+                  <strong className="text-base">Date:</strong>
+                  <input
+                    type="date"
+                    name="date"
+                    // value={formData.date}
+                    onChange={handleInputChange}
+                    placeholder="Date"
+                    className="p-1 w-full border rounded"
+                    disabled
+                    required
+                  />
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <strong className="text-base">Date:</strong>
+                  <input
+                    type="date"
+                    name="date"
+                    // value={formData.date}
+                    onChange={handleInputChange}
+                    placeholder="Date"
+                    className="p-1 w-full  border rounded"
+                    disabled
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <label className="block text-base font-medium">
+              Employee Comment
+            </label>
             <textarea
               name="employeeComments"
               // value={formData.employeeComments}
               onChange={handleInputChange}
-              placeholder="Employee Comments"
               className="w-full p-2 mb-4 border rounded resize-none"
               disabled
               rows="1"
