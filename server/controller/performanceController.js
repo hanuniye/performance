@@ -122,7 +122,7 @@ export const getPerformanceReviews = async (req, res) => {
     return res.status(200).json({ msg: performanceReviews });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -156,7 +156,7 @@ export const getSinglePerformanceReview = async (req, res) => {
     return res.status(200).json({ msg: performanceReviews });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -206,7 +206,7 @@ export const getSinglePerformanceReviewForUpdate = async (req, res) => {
     return res.status(200).json({ msg: performanceReviews });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -272,6 +272,6 @@ export const reviewPerformanceReview = async (req, res) => {
     console.error(error);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal Server Error" });
+      .json({ error: error.message });
   }
 };

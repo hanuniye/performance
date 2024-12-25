@@ -26,6 +26,7 @@ const Home = () => {
         setPerformanceReviews(response.data?.msg);
       } catch (error) {
         if (error.response) {
+          console.log(error.response.data);
           toast.error(error.response.data.error);
         } else {
           console.log(error);
