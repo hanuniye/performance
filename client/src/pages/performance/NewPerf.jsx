@@ -120,7 +120,7 @@ const PerformanceReviewForm = ({}) => {
       navigate("/performance_reviews");
     } catch (error) {
       if (error.response) {
-        // console.log(error.response.data.error);
+        console.log(error.response.data);
         toast.error(error.response.data.error);
       } else {
         console.log(error.message);

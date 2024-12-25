@@ -22,6 +22,7 @@ export const addPerformanceReview = async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ error: "All fields are required" });
   }
+  console.log(department)
 
   try {
     const result = await prisma.$transaction(async (prisma) => {
@@ -33,7 +34,7 @@ export const addPerformanceReview = async (req, res) => {
           name,
           title,
           manager,
-          department,
+          department: department,
         },
       });
 
