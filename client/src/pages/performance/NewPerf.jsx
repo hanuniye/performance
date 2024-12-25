@@ -130,73 +130,113 @@ const PerformanceReviewForm = ({}) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="max-w-4xl mx-auto p-6 mt-5 bg-white shadow-md rounded-lg"
+      className="max-w-4xl mx-auto mt-5 pb-6 bg-white shadow-md rounded-lg"
     >
-      <div className="mb-16">
-        <h2 className="text-2xl font-bold mb-4">Performance Review Form</h2>
-        <label className="block mb-2">(FY)</label>
-        <select
-          name="fy"
-          value={formData.fy}
-          onChange={handleInputChange}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        >
-          <option value="">Select FY</option>
-          {Array.from({ length: endYear - startYear + 1 }, (_, index) => {
-            const year = startYear + index;
-            return (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            );
-          })}
-        </select>
-        <label className="block mb-2">Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          placeholder="Name"
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <label className="block mb-2">Title</label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-          placeholder="Title"
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <label className="block mb-2">Manager</label>
-        <input
-          type="text"
-          name="manager"
-          value={formData.manager}
-          onChange={handleInputChange}
-          placeholder="Manager"
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <label className="block mb-2">Location</label>
-        <input
-          type="text"
-          name="location"
-          value={formData.location}
-          onChange={handleInputChange}
-          placeholder="Location"
-          className="w-full p-2 mb-10 border rounded"
-          required
-        />
+      <div className="w-full h-[130px]">
+        <img src="/care5.png" alt="hero" className="w-full h-full" />
+      </div>
+      <div className="mb-16 mx-6 mt-10">
+        <h2 className="text-2xl font-bold mb-2">Performance Review Form</h2>
+        <div className="flex items-start gap-2 mb-1">
+          <strong className="text-lg">FY:</strong>
+          <select
+            name="fy"
+            value={formData.fy}
+            onChange={handleInputChange}
+            className="border rounded p-1"
+            required
+          >
+            <option value="">Select FY</option>
+            {Array.from({ length: endYear - startYear + 1 }, (_, index) => {
+              const year = startYear + index;
+              return (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <p className="font-medium text-[15px] mb-4">
+          Use the worksheet to help you set goals and scale your personal and
+          global impact. <span className="text-red-600">Note:</span> Please
+          enter 3-5 goals, with one being a development goal You must select one
+          of the four global impact areas shown in the drop-down list and at
+          least one core competency for each of your goals.
+        </p>
+        <div className="flex items-start gap-5 mb-4">
+          <div className="left w-1/2">
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base">Name:</strong>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Name"
+                className="p-1  border rounded w-full  ml-[22px]"
+                required
+              />
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base">Manager:</strong>
+              <input
+                type="text"
+                name="manager"
+                value={formData.manager}
+                onChange={handleInputChange}
+                placeholder="Manager"
+                className="p-1  border rounded w-full"
+                required
+              />
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base">Location:</strong>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="Location"
+                className="p-1 border rounded w-full ml-[2px]"
+                required
+              />
+            </div>
+          </div>
+          <div className="right w-1/2">
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base">Title:</strong>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="Title"
+                className="p-1 w-full  ml-[59px] border rounded"
+                required
+              />
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base">Department:</strong>
+              <input
+                type="text"
+                name="department"
+                value={formData.department}
+                onChange={handleInputChange}
+                placeholder="Department"
+                className="p-1 w-full  border rounded"
+                required
+              />
+            </div>
+          </div>
+        </div>
 
         {formData.goals.map((goal, index) => (
-          <div key={index} className="mb-6 p-4 border rounded-lg bg-gray-50">
+          <div key={index} className="mb-6 rounded-lg">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">Goal {index + 1}</h3>
+              <h3 className="text-xl font-semibold text-[#e36f25]">
+                #{index + 1} Goal{" "}
+              </h3>
               {formData?.goals?.length > 1 && (
                 <button
                   type="button"
@@ -207,286 +247,321 @@ const PerformanceReviewForm = ({}) => {
                 </button>
               )}
             </div>
-            <label className="block mb-2">Global Impact Area</label>
-            <select
-              name="globalImpactArea"
-              value={goal.globalImpactArea}
-              onChange={(e) => handleInputChange(e, "goals", index)}
-              className="w-full p-2 mb-4 border rounded"
-              required
-            >
-              <option value="">Select Global Impact Area</option>
-              <option value="Locally Led">Locally Led</option>
-              <option value="Globally Scaled">Globally Scaled</option>
-              <option value="Foundational">Foundational</option>
-              <option value="Gender Equal">Gender Equal</option>
-            </select>
-            <label className="block mb-2">Core Competency</label>
-            <select
-              name="coreCompetency"
-              value={goal.coreCompetency}
-              onChange={(e) => handleInputChange(e, "goals", index)}
-              className="w-full p-2 mb-4 border rounded"
-              required
-            >
-              <option value="">Select Core Competency</option>
-              <option value="Communication">Communication</option>
-              <option value="Delivering Results">Delivering Results</option>
-            </select>
-            <label className="block mb-2">Functional Competency</label>
-            <textarea
-              name="functionalCompetency"
-              value={goal.functionalCompetency}
-              onChange={(e) => handleInputChange(e, "goals", index)}
-              placeholder="Functional Competency"
-              className="w-full p-2 mb-4 border rounded resize-none"
-              rows="1"
-              style={{ minHeight: "100px" }}
-              required
-              onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = `${e.target.scrollHeight}px`;
-              }}
-            />
-            <label className="block mb-2">
-              List Key Tasks To Accomplish The Goal
-            </label>
-            <textarea
-              name="keyTasks"
-              value={goal.keyTasks}
-              onChange={(e) => handleInputChange(e, "goals", index)}
-              placeholder="Key Tasks"
-              className="w-full p-2 mb-4 border rounded resize-none"
-              rows="1"
-              style={{ minHeight: "100px" }}
-              required
-              onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = `${e.target.scrollHeight}px`;
-              }}
-            />
-            <label className="block mb-2">Why is this important?</label>
-            <textarea
-              name="whyImportant"
-              value={goal.whyImportant}
-              onChange={(e) => handleInputChange(e, "goals", index)}
-              placeholder="Why is this important?"
-              className="w-full p-2 mb-4 border rounded resize-none"
-              rows="1"
-              style={{ minHeight: "100px" }}
-              required
-              onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = `${e.target.scrollHeight}px`;
-              }}
-            />
-            <label className="block mb-2">When will you accomplish it?</label>
-            <input
-              type="date"
-              name="whenAccomplish"
-              value={goal.whenAccomplish}
-              onChange={(e) => handleInputChange(e, "goals", index)}
-              className="w-full p-2 mb-4 border rounded"
-              required
-            />
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base w-[250px]">
+                Global Impact Area:
+              </strong>
+              <select
+                name="globalImpactArea"
+                value={goal.globalImpactArea}
+                onChange={(e) => handleInputChange(e, "goals", index)}
+                className="p-2 mb-1 border rounded w-full"
+                required
+              >
+                <option value="">Select Global Impact Area</option>
+                <option value="Locally Led">Locally Led</option>
+                <option value="Globally Scaled">Globally Scaled</option>
+                <option value="Foundational">Foundational</option>
+                <option value="Gender Equal">Gender Equal</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <strong className="text-base w-[250px]">Core Competency:</strong>
+              <select
+                name="coreCompetency"
+                value={goal.coreCompetency}
+                onChange={(e) => handleInputChange(e, "goals", index)}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="">Select Core Competency</option>
+                <option value="Communication">Communication</option>
+                <option value="Delivering Results">Delivering Results</option>
+                <option value="Dynamic Learning Mindset">
+                  Dynamic Learning Mindset
+                </option>
+                <option value="Strategic Leadership & Execution">
+                  Strategic Leadership & Execution
+                </option>
+                <option value="People Leadership">People Leadership</option>
+                <option value="Relationship Building">
+                  Relationship Building
+                </option>
+                <option value="nclusion">nclusion</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2 mb-4">
+              <strong className="text-base  w-[250px]">
+                Functional Competency:
+              </strong>
+              <textarea
+                name="functionalCompetency"
+                value={goal.functionalCompetency}
+                onChange={(e) => handleInputChange(e, "goals", index)}
+                placeholder="Functional Competency"
+                className="w-full p-2 border rounded resize-none"
+                rows="1"
+                style={{ minHeight: "100px" }}
+                required
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+              />
+            </div>
+
+            <div className="flex items-start border-[2px] border-black mb-4">
+              <div className="w-1/3 py-1">
+                <label className="block border-b-[2px] border-black px-1 text-xs font-bold">
+                  List Key Tasks To Accomplish The Goal
+                </label>
+                <textarea
+                  name="keyTasks"
+                  value={goal.keyTasks}
+                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  style={{ minHeight: "200px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+              <div className="w-1/3 py-1 border-x-[2px] border-black">
+                <label className="block border-b-[2px] capitalize border-black px-1 text-xs font-bold">
+                  Why is this important to you and your team?
+                </label>
+                <textarea
+                  name="whyImportant"
+                  value={goal.whyImportant}
+                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  style={{ minHeight: "200px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+              <div className="w-1/3 py-1 ">
+                <label className="block border-b-[2px] capitalize border-black px-1 text-xs font-bold">
+                  When will you accomplish it?
+                </label>
+                <textarea
+                  name="whenAccomplish"
+                  value={goal.whenAccomplish}
+                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  style={{ minHeight: "200px" }}
+                  required
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+            </div>
 
             {goal.quarterlyUpdates.map((update, subIndex) => (
               <div
                 key={subIndex}
-                className="mb-4 p-4 border rounded-lg bg-white"
+                className="grid grid-cols-2 gap-4 border-[2px] border-black mb-4"
               >
-                <h4 className="text-lg font-medium mb-2">Quarterly Updates</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h5 className="font-semibold mb-2">
-                      Employee Updates(Optional)
-                    </h5>
-                    <textarea
-                      name="q1"
-                      value={update.employeeUpdates.q1}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q1"
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                    <textarea
-                      name="q2"
-                      value={update.employeeUpdates.q2}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q2"
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                    <textarea
-                      name="q3"
-                      value={update.employeeUpdates.q3}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q3"
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                    <textarea
-                      name="q4"
-                      value={update.employeeUpdates.q4}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "employeeUpdates"
-                        )
-                      }
-                      placeholder="Employee Q4"
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <h5 className="font-semibold mb-2">
-                      Manager Updates(Optional)
-                    </h5>
-                    <textarea
-                      name="q1"
-                      // value={update.managerUpdates.q1}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Employee Q1"
-                      disabled
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                    <textarea
-                      name="q2"
-                      // value={update.managerUpdates.q2}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Employee Q2"
-                      disabled
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                    <textarea
-                      name="q3"
-                      // value={update.managerUpdates.q3}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Employee Q3"
-                      disabled
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                    <textarea
-                      name="q4"
-                      // value={update.managerUpdates.q4}
-                      onChange={(e) =>
-                        handleInputChange(
-                          e,
-                          "goals",
-                          index,
-                          subIndex,
-                          "managerUpdates"
-                        )
-                      }
-                      placeholder="Employee Q4"
-                      disabled
-                      className="w-full p-2 mb-4 border rounded resize-none"
-                      rows="1"
-                      style={{ minHeight: "50px" }}
-                      required
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
+                <div className="border-r-[2px] border-black">
+                  <h5 className="font-bold mb-2 p-2 bg-gray-400 border-b-[2px] border-black">
+                    Employee Updates(Optional)
+                  </h5>
+                  <textarea
+                    name="q1"
+                    value={update.employeeUpdates.q1}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "employeeUpdates"
+                      )
+                    }
+                    placeholder="Employee Q1"
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                  <textarea
+                    name="q2"
+                    value={update.employeeUpdates.q2}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "employeeUpdates"
+                      )
+                    }
+                    placeholder="Employee Q2"
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                  <textarea
+                    name="q3"
+                    value={update.employeeUpdates.q3}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "employeeUpdates"
+                      )
+                    }
+                    placeholder="Employee Q3"
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                  <textarea
+                    name="q4"
+                    value={update.employeeUpdates.q4}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "employeeUpdates"
+                      )
+                    }
+                    placeholder="Employee Q4"
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                </div>
+                <div>
+                  <h5 className="font-semibold mb-2 ">
+                    Manager Updates(Optional)
+                  </h5>
+                  <textarea
+                    name="q1"
+                    // value={update.managerUpdates.q1}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "managerUpdates"
+                      )
+                    }
+                    placeholder="Employee Q1"
+                    disabled
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                  <textarea
+                    name="q2"
+                    // value={update.managerUpdates.q2}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "managerUpdates"
+                      )
+                    }
+                    placeholder="Employee Q2"
+                    disabled
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                  <textarea
+                    name="q3"
+                    // value={update.managerUpdates.q3}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "managerUpdates"
+                      )
+                    }
+                    placeholder="Employee Q3"
+                    disabled
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                  <textarea
+                    name="q4"
+                    // value={update.managerUpdates.q4}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        "goals",
+                        index,
+                        subIndex,
+                        "managerUpdates"
+                      )
+                    }
+                    placeholder="Employee Q4"
+                    disabled
+                    className="w-full p-2 mb-4 border rounded resize-none"
+                    rows="1"
+                    style={{ minHeight: "50px" }}
+                    required
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
                 </div>
               </div>
             ))}
@@ -594,7 +669,7 @@ const PerformanceReviewForm = ({}) => {
         </button>
       </div>
 
-      <div className="mb-10">
+      <div className="mb-10  mx-6">
         <h2
           className="text-2xl font-bold mb-4 cursor-pointer"
           onClick={() => setIsMidYearCollapsed(!isMidYearCollapsed)}
@@ -643,7 +718,7 @@ const PerformanceReviewForm = ({}) => {
         )}
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6  mx-6">
         <h2
           className="text-2xl font-bold mb-4 cursor-pointer"
           onClick={() => setIsYearEndCollapsed(!isYearEndCollapsed)}
@@ -819,7 +894,7 @@ const PerformanceReviewForm = ({}) => {
 
       <button
         type="submit"
-        className="w-full py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-300"
+        className=" w-[95%] py-2  mx-6 mr6 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-300"
       >
         Submit
       </button>
