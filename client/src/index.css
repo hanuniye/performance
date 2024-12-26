@@ -32,6 +32,9 @@
     /* size: A4 ; */
     margin: 10mm;
     /* Add margins to the printed page */
+    @bottom-right {
+      content: "Page " counter(page);
+    }
   }
   .test {
     page-break-inside: avoid;
@@ -39,6 +42,41 @@
     break-inside: avoid;
   }
   .year-end {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .comment {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .Sign-Off {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .Manager-Assessment {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .Self-Assessment {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .comments {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .rating {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .feedback{
     page-break-inside: avoid;
     /* Prevent breaking inside child elements */
     break-inside: avoid;

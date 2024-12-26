@@ -4,9 +4,7 @@ import { usePrivateAxios } from "../../HOOKS/usePrivateAxios";
 import Spinner from "../../components/Spinner";
 import { toast } from "sonner";
 import { useGlobalProvider } from "../../HOOKS/useGlobalProvider";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
 import "../../index.css";
 
@@ -21,9 +19,6 @@ const PerformanceReviewDetails = () => {
 
   const startYear = 2024;
   const endYear = 2050;
-
-  const [isMidYearCollapsed, setIsMidYearCollapsed] = useState(true);
-  const [isYearEndCollapsed, setIsYearEndCollapsed] = useState(true);
 
   useEffect(() => {
     const fetchReview = async () => {
@@ -521,7 +516,7 @@ const PerformanceReviewDetails = () => {
                   Use this section to provide feedback and rating for the
                   outcome of the goal.
                 </p>
-                <div className="flex items-start border-[2px] border-black mb-1">
+                <div className="flex items-start border-[2px] border-black mb-1 feedback">
                   <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
                     <label className="block border-b-[2px] border-black px-1 text-base font-medium">
                       Employee Feedback
@@ -560,7 +555,7 @@ const PerformanceReviewDetails = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-[2px]">
+                <div className="grid grid-cols-2 gap-[2px] rating">
                   <select
                     name="selfRating"
                     value={goal?.selfRating || ""}
@@ -618,25 +613,73 @@ const PerformanceReviewDetails = () => {
           </div>
 
           <div className="mb-10  mx-6">
-            <h2
-              className="text-xl font-bold mb-4 cursor-pointer text-red-600"
-              onClick={() => setIsMidYearCollapsed(!isMidYearCollapsed)}
-            >
-              Mid-Year Review {isMidYearCollapsed ? "+" : "-"}
+            <h2 className="text-xl font-bold mb-4 cursor-pointer text-red-600">
+              Mid-Year Review
             </h2>
-            {!isMidYearCollapsed && (
-              <div className="flex items-start border-[2px] border-black mb-4">
+            <div className="flex items-start border-[2px] border-black mb-4 comments">
+              <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Employee Comment
+                </label>
+                <textarea
+                  name="mid_employeeComment"
+                  disabled={isSupervisor || isHR}
+                  value={formData?.mid_employeeComment || ""}
+                  onChange={handleInputChange}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  style={{ minHeight: "200px" }}
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+              <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
+                <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                  Manager Comment
+                </label>
+                <textarea
+                  name="managerComment"
+                  disabled={isEmployee || isHR}
+                  value={formData?.managerComment || ""}
+                  onChange={handleInputChange}
+                  className="w-full resize-none pt-1 outline-none px-1"
+                  rows="1"
+                  style={{ minHeight: "200px" }}
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6  mx-6 year-end">
+            <h2 className="text-xl font-bold mb-1 cursor-pointer text-red-600">
+              Year-End Assessment
+            </h2>
+
+            <>
+              <label className="block text-sm font-bold mb-6">
+                Looking back at this fiscal year, capture the highlights here.
+              </label>
+              <h2 className="text-xl font-bold mb-4  text-red-600">
+                Self-Assessment
+              </h2>
+              <div className="flex items-start border-[2px]  border-black mb-4 Self-Assessment">
                 <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
                   <label className="block border-b-[2px] border-black px-1 text-base font-medium">
-                    Employee Comment
+                    Strengths/Major Accomplishments
                   </label>
                   <textarea
-                    name="mid_employeeComment"
-                    disabled={isSupervisor || isHR}
-                    value={formData?.mid_employeeComment || ""}
+                    name="self_majorAccomplishments"
+                    value={formData?.self_majorAccomplishments || ""}
                     onChange={handleInputChange}
                     className="w-full resize-none pt-1 outline-none px-1"
                     rows="1"
+                    disabled={isSupervisor || isHR}
                     style={{ minHeight: "200px" }}
                     onInput={(e) => {
                       e.target.style.height = "auto";
@@ -646,16 +689,16 @@ const PerformanceReviewDetails = () => {
                 </div>
                 <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
                   <label className="block border-b-[2px] border-black px-1 text-base font-medium">
-                    Manager Comment
+                    Areas for Improvement
                   </label>
                   <textarea
-                    name="managerComment"
-                    disabled={isEmployee || isHR}
-                    value={formData?.managerComment || ""}
+                    name="self_areasForImprovement"
+                    value={formData?.self_areasForImprovement || ""}
                     onChange={handleInputChange}
                     className="w-full resize-none pt-1 outline-none px-1"
                     rows="1"
                     style={{ minHeight: "200px" }}
+                    disabled={isSupervisor || isHR}
                     onInput={(e) => {
                       e.target.style.height = "auto";
                       e.target.style.height = `${e.target.scrollHeight}px`;
@@ -663,204 +706,144 @@ const PerformanceReviewDetails = () => {
                   />
                 </div>
               </div>
-            )}
-          </div>
 
-          <div className="mb-6  mx-6 year-end">
-            <h2
-              className="text-xl font-bold mb-1 cursor-pointer text-red-600"
-              onClick={() => setIsYearEndCollapsed(!isYearEndCollapsed)}
-            >
-              Year-End Assessment {isYearEndCollapsed ? "+" : "-"}
-            </h2>
-
-            {!isYearEndCollapsed && (
-              <>
-                <label className="block text-sm font-bold mb-6">
-                  Looking back at this fiscal year, capture the highlights here.
-                </label>
-                <h2 className="text-xl font-bold mb-4  text-red-600">
-                  Self-Assessment
-                </h2>
-                <div className="flex items-start border-[2px] border-black mb-4">
-                  <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
-                    <label className="block border-b-[2px] border-black px-1 text-base font-medium">
-                      Strengths/Major Accomplishments
-                    </label>
-                    <textarea
-                      name="self_majorAccomplishments"
-                      value={formData?.self_majorAccomplishments || ""}
-                      onChange={handleInputChange}
-                      className="w-full resize-none pt-1 outline-none px-1"
-                      rows="1"
-                      disabled={isSupervisor || isHR}
-                      style={{ minHeight: "200px" }}
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
-                  <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
-                    <label className="block border-b-[2px] border-black px-1 text-base font-medium">
-                      Areas for Improvement
-                    </label>
-                    <textarea
-                      name="self_areasForImprovement"
-                      value={formData?.self_areasForImprovement || ""}
-                      onChange={handleInputChange}
-                      className="w-full resize-none pt-1 outline-none px-1"
-                      rows="1"
-                      style={{ minHeight: "200px" }}
-                      disabled={isSupervisor || isHR}
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <h2 className="text-xl font-bold mb-4 text-red-600">
-                  Manager Assessment
-                </h2>
-                <div className="flex items-start border-[2px] border-black mb-4">
-                  <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
-                    <label className="block border-b-[2px] border-black px-1 text-base font-medium">
-                      Strengths/Major Accomplishments
-                    </label>
-                    <textarea
-                      name="manag_majorAccomplishments"
-                      value={formData?.manag_majorAccomplishments || ""}
-                      onChange={handleInputChange}
-                      className="w-full resize-none pt-1 outline-none px-1"
-                      rows="1"
-                      disabled={isEmployee || isHR}
-                      style={{ minHeight: "200px" }}
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
-                  <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
-                    <label className="block border-b-[2px] border-black px-1 text-base font-medium">
-                      Areas for Improvement
-                    </label>
-                    <textarea
-                      name="manag_areasForImprovement"
-                      value={formData?.manag_areasForImprovement || ""}
-                      onChange={handleInputChange}
-                      className="w-full resize-none pt-1 outline-none px-1"
-                      rows="1"
-                      style={{ minHeight: "200px" }}
-                      disabled={isEmployee || isHR}
-                      onInput={(e) => {
-                        e.target.style.height = "auto";
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 mb-1">
-                  <strong className="text-base w-[140px]">
-                    Overall Rating:
-                  </strong>
-                  <select
-                    name="overallRating"
-                    value={formData?.overallRating || ""}
-                    disabled
+              <h2 className="text-xl font-bold mb-4 text-red-600">
+                Manager-Assessment
+              </h2>
+              <div className="flex items-start border-[2px] border-black mb-4 Manager-Assessment">
+                <div className="w-1/2 py-1 border-r-[2px] border-blackLight">
+                  <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                    Strengths/Major Accomplishments
+                  </label>
+                  <textarea
+                    name="manag_majorAccomplishments"
+                    value={formData?.manag_majorAccomplishments || ""}
                     onChange={handleInputChange}
-                    className="p-2 mb-1 border rounded w-full"
-                  >
-                    <option value="">Select Overall Rating</option>
-                    <option value="Significantly Exceeds Requirements (SER)">
-                      Significantly Exceeds Requirements (SER)
-                    </option>
-                    <option value="Exceeds Requirements (ER)">
-                      Exceeds Requirements (ER)
-                    </option>
-                    <option value="Meets All Requirements (MA)">
-                      Meets All Requirements (MA)
-                    </option>
-                    <option value="Meets Most Requirements (M)">
-                      Meets Most Requirements (M)
-                    </option>
-                    <option value="Below Requirements (BR)">
-                      Below Requirements (BR)
-                    </option>
-                  </select>
+                    className="w-full resize-none pt-1 outline-none px-1"
+                    rows="1"
+                    disabled={isEmployee || isHR}
+                    style={{ minHeight: "200px" }}
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
                 </div>
+                <div className="w-1/2 py-1 border-l-[2px] border-blackLight">
+                  <label className="block border-b-[2px] border-black px-1 text-base font-medium">
+                    Areas for Improvement
+                  </label>
+                  <textarea
+                    name="manag_areasForImprovement"
+                    value={formData?.manag_areasForImprovement || ""}
+                    onChange={handleInputChange}
+                    className="w-full resize-none pt-1 outline-none px-1"
+                    rows="1"
+                    style={{ minHeight: "200px" }}
+                    disabled={isEmployee || isHR}
+                    onInput={(e) => {
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mb-1">
+                <strong className="text-base w-[140px]">Overall Rating:</strong>
+                <select
+                  name="overallRating"
+                  value={formData?.overallRating || ""}
+                  disabled
+                  onChange={handleInputChange}
+                  className="p-2 mb-1 border rounded w-full"
+                >
+                  <option value="">Select Overall Rating</option>
+                  <option value="Significantly Exceeds Requirements (SER)">
+                    Significantly Exceeds Requirements (SER)
+                  </option>
+                  <option value="Exceeds Requirements (ER)">
+                    Exceeds Requirements (ER)
+                  </option>
+                  <option value="Meets All Requirements (MA)">
+                    Meets All Requirements (MA)
+                  </option>
+                  <option value="Meets Most Requirements (M)">
+                    Meets Most Requirements (M)
+                  </option>
+                  <option value="Below Requirements (BR)">
+                    Below Requirements (BR)
+                  </option>
+                </select>
+              </div>
 
-                <h2 className="text-xl font-bold mb-4 text-red-600">
-                  Sign Off
-                </h2>
-                <div className="flex items-start gap-5 mb-4">
-                  <div className="left w-1/2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <strong className="text-base">Manager:</strong>
-                      <input
-                        type="text"
-                        name="managerSignature"
-                        value={formData?.managerSignature || ""}
-                        onChange={handleInputChange}
-                        placeholder="Manager Signature"
-                        className="p-1  border ml-[6px] rounded w-full "
-                        disabled={isEmployee || isHR}
-                      />
-                    </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <strong className="text-base">Employee:</strong>
-                      <input
-                        type="text"
-                        name="employeeSignature"
-                        value={formData?.employeeSignature || ""}
-                        onChange={handleInputChange}
-                        placeholder="Employee Signature"
-                        className="p-1  border rounded w-full"
-                        disabled={isSupervisor || isHR}
-                      />
-                    </div>
+              <h2 className="text-xl font-bold mb-4 text-red-600">Sign Off</h2>
+              <div className="flex items-start gap-5 mb-4 Sign-Off">
+                <div className="left w-1/2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <strong className="text-base">Manager:</strong>
+                    <input
+                      type="text"
+                      name="managerSignature"
+                      value={formData?.managerSignature || ""}
+                      onChange={handleInputChange}
+                      placeholder="Manager Signature"
+                      className="p-1  border ml-[6px] rounded w-full "
+                      disabled={isEmployee || isHR}
+                    />
                   </div>
-                  <div className="right w-1/2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <strong className="text-base">Date:</strong>
-                      <input
-                        type="date"
-                        name="managerDate"
-                        value={
-                          formData?.managerDate
-                            ? new Date(formData?.managerDate)
-                                .toISOString()
-                                .split("T")[0]
-                            : ""
-                        }
-                        onChange={handleInputChange}
-                        placeholder="Date"
-                        className="p-1 w-full border rounded"
-                        disabled={isEmployee || isHR}
-                      />
-                    </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <strong className="text-base">Date:</strong>
-                      <input
-                        type="date"
-                        name="employeeDate"
-                        value={
-                          formData?.employeeDate
-                            ? new Date(formData?.employeeDate)
-                                .toISOString()
-                                .split("T")[0]
-                            : ""
-                        }
-                        onChange={handleInputChange}
-                        placeholder="Date"
-                        className="p-1 w-full  border rounded"
-                        disabled={isSupervisor || isHR}
-                      />
-                    </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <strong className="text-base">Employee:</strong>
+                    <input
+                      type="text"
+                      name="employeeSignature"
+                      value={formData?.employeeSignature || ""}
+                      onChange={handleInputChange}
+                      placeholder="Employee Signature"
+                      className="p-1  border rounded w-full"
+                      disabled={isSupervisor || isHR}
+                    />
                   </div>
                 </div>
+                <div className="right w-1/2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <strong className="text-base">Date:</strong>
+                    <input
+                      type="date"
+                      name="managerDate"
+                      value={
+                        formData?.managerDate
+                          ? new Date(formData?.managerDate)
+                              .toISOString()
+                              .split("T")[0]
+                          : ""
+                      }
+                      onChange={handleInputChange}
+                      placeholder="Date"
+                      className="p-1 w-full border rounded"
+                      disabled={isEmployee || isHR}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <strong className="text-base">Date:</strong>
+                    <input
+                      type="date"
+                      name="employeeDate"
+                      value={
+                        formData?.employeeDate
+                          ? new Date(formData?.employeeDate)
+                              .toISOString()
+                              .split("T")[0]
+                          : ""
+                      }
+                      onChange={handleInputChange}
+                      placeholder="Date"
+                      className="p-1 w-full  border rounded"
+                      disabled={isSupervisor || isHR}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="comment">
                 <label className="block text-base font-medium">
                   Employee Comment
                 </label>
@@ -877,8 +860,8 @@ const PerformanceReviewDetails = () => {
                     e.target.style.height = `${e.target.scrollHeight}px`;
                   }}
                 />
-              </>
-            )}
+              </div>
+            </>
           </div>
         </div>
 
