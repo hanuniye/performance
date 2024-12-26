@@ -27,22 +27,32 @@
   color: crimson;
 }
 
-@page {
-  margin: 50px; 
-  /* Add margins to the printed page */
+@media print {
+  @page {
+    /* size: A4 ; */
+    margin: 10mm;
+    /* Add margins to the printed page */
+  }
+  .test {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  .year-end {
+    page-break-inside: avoid;
+    /* Prevent breaking inside child elements */
+    break-inside: avoid;
+  }
+  
 }
 
-body {
+/* body {
   margin: 0; /* Remove default body margin */
-}
+/* } */
 
-.print-container {
-  padding: 20px; 
-  /* Add padding inside the content */
-}
+/* .test { */
+/* padding: 20px 5px; */
+/* Add padding inside the content */
+/* } */
 
-.print-container > * {
-  /* page-break-inside: avoid;  */
-  /* Prevent breaking inside child elements */
-  /* break-inside: avoid; */
-}
+
