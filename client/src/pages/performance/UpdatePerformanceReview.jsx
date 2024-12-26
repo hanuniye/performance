@@ -82,8 +82,6 @@ const UpdatePerformanceReview = () => {
     }
   };
 
-  
-
   if (isLoading) {
     return <Spinner />;
   }

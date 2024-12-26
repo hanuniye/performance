@@ -39,7 +39,8 @@ model PerformanceReview {
   location                   String
   fy                         String
   department                 String
-  employeeComment            String?
+  hrComment                  String?
+  mid_employeeComment        String?
   managerComment             String?
   self_majorAccomplishments  String?
   self_areasForImprovement   String?
@@ -50,7 +51,7 @@ model PerformanceReview {
   employeeDate               DateTime?
   managerDate                DateTime?
   employeeSignature          String?
-  employeeComments           String?
+  end_employeeComment        String?
   status                     Status    @default(SUBMITTED) // Enum for roles
   goals                      Goal[]    @relation("ReviewGoals")
   createdAt                  DateTime  @default(now())

@@ -23,7 +23,7 @@ import PerformanceReviewsList from "./pages/performance/PerformanceReviewsList";
 import PerformanceReviewDetails from "./pages/performance/PerformanceReviewDetails";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoutes from "./components/ProtectedRoute";
-import UpdatePerformanceReview from "./pages/performance/UpdatePerformanceReview";
+// import UpdatePerformanceReview from "./pages/performance/UpdatePerformanceReview";
 
 function App() {
   const client = new QueryClient({
@@ -66,10 +66,10 @@ function App() {
                     />
                   }
                 >
-                  <Route
+                  {/* <Route
                     path=":id/update"
                     element={<UpdatePerformanceReview />}
-                  />
+                  /> */}
                 </Route>
               </Route>
             </Route>

@@ -25,7 +25,8 @@ const updatePerformanceReview = async (req, res) => {
     location,
     fy,
     goals,
-    employeeComment,
+    mid_employeeComment,
+    hrComment,
     managerComment,
     self_majorAccomplishments,
     self_areasForImprovement,
@@ -36,7 +37,7 @@ const updatePerformanceReview = async (req, res) => {
     employeeDate,
     managerDate,
     employeeSignature,
-    employeeComments,
+    end_employeeComment,
     status,
   } = req.body;
 
@@ -52,7 +53,7 @@ const updatePerformanceReview = async (req, res) => {
         name,
         title,
         manager,
-        employeeComment,
+        mid_employeeComment,
         managerComment,
         self_majorAccomplishments,
         self_areasForImprovement,
@@ -60,10 +61,11 @@ const updatePerformanceReview = async (req, res) => {
         manag_areasForImprovement,
         overallRating,
         managerSignature,
+        hrComment,
         employeeDate: employeeDate ? new Date(employeeDate) : null,
         managerDate: managerDate ? new Date(managerDate) : null,
         employeeSignature,
-        employeeComments,
+        end_employeeComment,
         goals: {
           deleteMany: {},
           create: goals.map((goal) => ({
@@ -72,7 +74,7 @@ const updatePerformanceReview = async (req, res) => {
             functionalCompetency: goal.functionalCompetency,
             keyTasks: goal.keyTasks,
             whyImportant: goal.whyImportant,
-            whenAccomplish: new Date(goal.whenAccomplish),
+            whenAccomplish: goal.whenAccomplish,
             employeeFeedback: goal.employeeFeedback,
             managerFeedback: goal.managerFeedback,
             selfRating: goal.selfRating,
@@ -123,7 +125,7 @@ router.get(
 );
 router.patch(
   "/:id",
-  roles([Role.EMPLOYEE, Role.SUPERVISOR]),
+  roles([Role.EMPLOYEE, Role.SUPERVISOR, Role.HR]),
   updatePerformanceReview
 );
 // router.delete("/:id", roles([Role.HR]), deleteSupervisor);
