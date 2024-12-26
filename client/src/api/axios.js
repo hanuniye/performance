@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://performance-j1rr.onrender.com/api";
 // http://localhost:5000
 // https://performance-71pc.onrender.com
 
