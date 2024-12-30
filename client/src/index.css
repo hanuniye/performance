@@ -32,9 +32,9 @@
     /* size: A4 ; */
     /* margin: 10mm; */
     /* Add margins to the printed page */
-    @bottom-right {
+    /* @bottom-right {
       content: "Page " counter(page);
-    }
+    } */
   }
   .test {
     page-break-inside: avoid;
