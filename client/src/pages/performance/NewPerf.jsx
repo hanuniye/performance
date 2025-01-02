@@ -18,6 +18,7 @@ const PerformanceReviewForm = ({}) => {
     defaultGoal: {
       globalImpactArea: "",
       coreCompetency: "",
+      coreCompetency1: "",
       functionalCompetency: "",
       keyTasks: "",
       whyImportant: "",
@@ -34,19 +35,6 @@ const PerformanceReviewForm = ({}) => {
       managerRating: "",
     },
     goals: [],
-
-    // employeeComment: "",
-    // managerComment: "",
-    // self_majorAccomplishments: "",
-    // self_areasForImprovement: "",
-    // maneg_majorAccomplishments: "",
-    // maneg_areasForImprovement: "",
-    // overallRating: "",
-    // managerSignature: "",
-    // managerDate: "",
-    // employeeDate: "",
-    // employeeSignature: "",
-    // employeeComments: "",
   });
   const Axios = usePrivateAxios();
   const navigate = useNavigate();
@@ -66,6 +54,7 @@ const PerformanceReviewForm = ({}) => {
         {
           globalImpactArea: "",
           coreCompetency: "",
+          coreCompetency1: "",
           functionalCompetency: "",
           keyTasks: "",
           whyImportant: "",
@@ -101,6 +90,13 @@ const PerformanceReviewForm = ({}) => {
       } else {
         updatedFormData.goals[index][name] = value;
       }
+    } else if (section === "defaultGoal") {
+      if (index !== undefined) {
+        updatedFormData.defaultGoal.quarterlyUpdates[index][field][name] =
+          value;
+      } else {
+        updatedFormData.defaultGoal[name] = value;
+      }
     } else {
       updatedFormData[name] = value;
     }
@@ -121,7 +117,7 @@ const PerformanceReviewForm = ({}) => {
       navigate("/performance_reviews");
     } catch (error) {
       if (error.response) {
-        console.log(error.response.data);
+        console.log(error.response);
         toast.error(error.response.data.error);
       } else {
         console.log(error.message);
@@ -269,7 +265,9 @@ const PerformanceReviewForm = ({}) => {
 
             <div className="rounded-lg">
               <div className="flex justify-between items-center mb-1">
-                <h3 className="text-xl font-semibold text-[#e36f25]">#1 Goal</h3>
+                <h3 className="text-xl font-semibold text-[#e36f25]">
+                  #1 Goal
+                </h3>
               </div>
               <div className="flex items-center gap-2 mb-1">
                 <strong className="text-base w-[250px]">
@@ -278,7 +276,7 @@ const PerformanceReviewForm = ({}) => {
                 <select
                   name="globalImpactArea"
                   value={formData.defaultGoal.globalImpactArea}
-                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  onChange={(e) => handleInputChange(e, "defaultGoal")}
                   className="p-2 mb-1 border rounded w-full"
                   required
                 >
@@ -296,7 +294,7 @@ const PerformanceReviewForm = ({}) => {
                 <select
                   name="coreCompetency"
                   value={formData.defaultGoal.coreCompetency}
-                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  onChange={(e) => handleInputChange(e, "defaultGoal")}
                   className="w-full p-2 border rounded"
                   required
                 >
@@ -321,9 +319,9 @@ const PerformanceReviewForm = ({}) => {
                   Core Competency:
                 </strong>
                 <select
-                  name="coreCompetency"
-                  value={formData.defaultGoal.coreCompetency}
-                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  name="coreCompetency1"
+                  value={formData.defaultGoal.coreCompetency1}
+                  onChange={(e) => handleInputChange(e, "defaultGoal")}
                   className="w-full p-2 border rounded"
                   required
                 >
@@ -352,7 +350,7 @@ const PerformanceReviewForm = ({}) => {
                   name="functionalCompetency"
                   value={formData.defaultGoal.functionalCompetency}
                   onChange={(e) => {
-                    handleInputChange(e, "goals", index);
+                    handleInputChange(e, "defaultGoal");
                     handleTextResize(e); // Resize on text change
                   }}
                   placeholder="Functional Competency"
@@ -381,7 +379,7 @@ const PerformanceReviewForm = ({}) => {
                     name="keyTasks"
                     value={formData.defaultGoal.keyTasks}
                     onChange={(e) => {
-                      handleInputChange(e, "goals");
+                      handleInputChange(e, "defaultGoal");
                       handleTextResize(e); // Resize on text change
                     }}
                     className="w-full resize-none pt-1 outline-none px-1"
@@ -404,7 +402,7 @@ const PerformanceReviewForm = ({}) => {
                     name="whyImportant"
                     value={formData.defaultGoal.whyImportant}
                     onChange={(e) => {
-                      handleInputChange(e, "goals", index);
+                      handleInputChange(e, "defaultGoal");
                       handleTextResize(e); // Resize on text change
                     }}
                     className="w-full resize-none pt-1 outline-none px-1"
@@ -427,7 +425,7 @@ const PerformanceReviewForm = ({}) => {
                     name="whenAccomplish"
                     value={formData.defaultGoal.whenAccomplish}
                     onChange={(e) => {
-                      handleInputChange(e, "goals", index);
+                      handleInputChange(e, "defaultGoal");
                       handleTextResize(e); // Resize on text change
                     }}
                     className="w-full resize-none pt-1 outline-none px-1"
@@ -444,9 +442,9 @@ const PerformanceReviewForm = ({}) => {
                 </div>
               </div>
 
-              {formData.defaultGoal.quarterlyUpdates.map((update, subIndex) => (
+              {formData.defaultGoal.quarterlyUpdates.map((update, index) => (
                 <div
-                  key={subIndex}
+                  key={index}
                   className="flex items-start border-[2px] border-blackLight mb-2"
                 >
                   <div className="border-r-[2px] border-blackLight">
@@ -459,9 +457,9 @@ const PerformanceReviewForm = ({}) => {
                       onChange={(e) => {
                         handleInputChange(
                           e,
-                          "goals",
+                          "defaultGoal",
                           index,
-                          subIndex,
+                          "",
                           "employeeUpdates"
                         );
                         handleTextResize(e); // Resize on text change
@@ -483,9 +481,9 @@ const PerformanceReviewForm = ({}) => {
                       onChange={(e) => {
                         handleInputChange(
                           e,
-                          "goals",
+                          "defaultGoal",
                           index,
-                          subIndex,
+                          "",
                           "employeeUpdates"
                         );
                         handleTextResize(e); // Resize on text change
@@ -507,9 +505,9 @@ const PerformanceReviewForm = ({}) => {
                       onChange={(e) => {
                         handleInputChange(
                           e,
-                          "goals",
+                          "defaultGoal",
                           index,
-                          subIndex,
+                          "",
                           "employeeUpdates"
                         );
                         handleTextResize(e); // Resize on text change
@@ -531,9 +529,9 @@ const PerformanceReviewForm = ({}) => {
                       onChange={(e) => {
                         handleInputChange(
                           e,
-                          "goals",
+                          "defaultGoal",
                           index,
-                          subIndex,
+                          "",
                           "employeeUpdates"
                         );
                         handleTextResize(e); // Resize on text change
@@ -670,7 +668,7 @@ const PerformanceReviewForm = ({}) => {
                     name="employeeFeedback"
                     value={formData.defaultGoal.employeeFeedback}
                     onChange={(e) => {
-                      handleInputChange(e, "goals", index);
+                      handleInputChange(e, "defaultGoal");
                       handleTextResize(e); // Resize on text change
                     }}
                     className="w-full resize-none pt-1 outline-none px-1"
@@ -688,7 +686,7 @@ const PerformanceReviewForm = ({}) => {
                 <select
                   name="selfRating"
                   value={formData.defaultGoal.selfRating}
-                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  onChange={(e) => handleInputChange(e, "defaultGoal")}
                   className="w-1/2 p-2 py-3 border-[2px] border-blackLight rounded"
                 >
                   <option value="" className="text-[14px]">
@@ -720,7 +718,7 @@ const PerformanceReviewForm = ({}) => {
                     name="managerFeedback"
                     value={formData.defaultGoal.managerFeedback}
                     onChange={(e) => {
-                      handleInputChange(e, "goals", index);
+                      handleInputChange(e, "defaultGoal");
                       handleTextResize(e); // Resize on text change
                     }}
                     className="w-full resize-none pt-1 outline-none px-1"
@@ -731,6 +729,7 @@ const PerformanceReviewForm = ({}) => {
                       overflow: "hidden",
                     }}
                     required
+                    disabled
                     onInput={handleTextResize} // Resize on input
                     onPaste={handleTextResize} //
                   />
@@ -738,7 +737,7 @@ const PerformanceReviewForm = ({}) => {
                 <select
                   name="managerRating"
                   // value={goal.managerRating}
-                  onChange={(e) => handleInputChange(e, "goals", index)}
+                  onChange={(e) => handleInputChange(e, "defaultGoal")}
                   className="w-1/2 p-2 py-3 border-[2px] border-blackLight rounded"
                   disabled
                 >
@@ -831,8 +830,8 @@ const PerformanceReviewForm = ({}) => {
                   Core Competency:
                 </strong>
                 <select
-                  name="coreCompetency"
-                  value={goal.coreCompetency}
+                  name="coreCompetency1"
+                  value={goal.coreCompetency1}
                   onChange={(e) => handleInputChange(e, "goals", index)}
                   className="w-full p-2 border rounded"
                   required
@@ -1241,6 +1240,7 @@ const PerformanceReviewForm = ({}) => {
                       overflow: "hidden",
                     }}
                     required
+                    disabled
                     onInput={handleTextResize} // Resize on input
                     onPaste={handleTextResize} //
                   />
@@ -1553,6 +1553,7 @@ const PerformanceReviewForm = ({}) => {
                       overflow: "hidden",
                     }}
                     required
+                    disabled
                     onInput={handleTextResize} // Resize on input
                     onPaste={handleTextResize} //
                   />

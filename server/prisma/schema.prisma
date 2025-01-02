@@ -30,9 +30,9 @@ model Users {
 }
 
 model PerformanceReview {
-  id                         String    @id @default(uuid())
+  id                         String        @id @default(uuid())
   employeeId                 String
-  employee                   Users     @relation("EmployeeReviews", fields: [employeeId], references: [id])
+  employee                   Users         @relation("EmployeeReviews", fields: [employeeId], references: [id])
   name                       String
   title                      String
   manager                    String
@@ -52,10 +52,11 @@ model PerformanceReview {
   managerDate                DateTime?
   employeeSignature          String?
   end_employeeComment        String?
-  status                     Status    @default(SUBMITTED) // Enum for roles
-  goals                      Goal[]    @relation("ReviewGoals")
-  createdAt                  DateTime  @default(now())
-  updatedAt                  DateTime  @updatedAt
+  status                     Status        @default(SUBMITTED) // Enum for roles
+  goals                      Goal[]        @relation("ReviewGoals")
+  createdAt                  DateTime      @default(now())
+  updatedAt                  DateTime      @updatedAt
+  defaultGoal                DefaultGoal[] @relation("ReviewDeafaultGoals")
 }
 
 model Goal {
@@ -64,6 +65,34 @@ model Goal {
   performanceReview    PerformanceReview @relation("ReviewGoals", fields: [performanceReviewId], references: [id])
   globalImpactArea     String
   coreCompetency       String
+  coreCompetency1      String
+  functionalCompetency String
+  keyTasks             String
+  whyImportant         String
+  whenAccomplish       String
+  employeeQ1           String?
+  employeeQ2           String?
+  employeeQ3           String?
+  employeeQ4           String?
+  managerQ1            String?
+  managerQ2            String?
+  managerQ3            String?
+  managerQ4            String?
+  employeeFeedback     String?
+  managerFeedback      String?
+  selfRating           String?
+  managerRating        String?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+}
+
+model DefaultGoal {
+  id                   String            @id @default(uuid())
+  performanceReviewId  String
+  performanceReview    PerformanceReview @relation("ReviewDeafaultGoals", fields: [performanceReviewId], references: [id])
+  globalImpactArea     String
+  coreCompetency       String
+  coreCompetency1      String
   functionalCompetency String
   keyTasks             String
   whyImportant         String
